@@ -1,0 +1,47 @@
+:root {
+  --purple-dark: #2e1c5b;
+  --purple: #4b3389;
+  --purple-light: #6c4fb8;
+  --accent-green: #39ff14;
+  --text-light: #fff;
+  --font-base: 'Press Start 2P', cursive, sans-serif;
+  /* Nuevo color para bordes */
+  --purple-light-border: #5c449e;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-base);
+  background-color: var(--purple-dark);
+  color: var(--text-light);
+  line-height: 1.4;
+}
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.btn-regresar{
+    display: inline-block;
+    position: relative;
+    top: 20px;            
+    left: 20px;
+    color:var(--text-light,solid);
+    background:#6c4fb8;
+    font-size: 1rem;
+     text-transform: uppercase;
+     font-family: var(--font-base);
+    padding: 0.6rem 1.2rem;
+     border: none;
+     border-radius: 4px;
+     cursor: pointer;
+     transition: background 0.2s ease, transform 0.1s ease;
+     z-index: 1000;   
+}
+.btn-regresar :hover{
+    color: var(--text-light);
+}

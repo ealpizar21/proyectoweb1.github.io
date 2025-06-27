@@ -50,17 +50,21 @@ body {
   gap: 2.75rem;
 }
 
-.nav-item {
+.nav-item :hover{
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  outline: 4px #39ff14 solid;
+  outline-offset: 4px;
+  border-radius: 6px;
 }
 
 .nav-item a {
   color: var(--text-light);
   font-size: 0.85rem;
-  text-decoration: none;
+  text-decoration: none
 }
+
 
 /* Navegación izquierda anclada */
 .top-nav.left {
@@ -83,6 +87,7 @@ body {
 
 .site-description {
   padding: 0.5rem 0 1.5rem;
+  text-align: center;
 }
 
 .site-description p {
