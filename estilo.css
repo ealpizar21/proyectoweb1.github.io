@@ -47,7 +47,7 @@ body {
 .top-nav ul {
   list-style: none;
   display: flex;
-  gap: 1rem;
+  gap: 2.75rem;
 }
 
 .nav-item {
