@@ -1,68 +1,188 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nosotros | Bit By Bit</title>
-  <link rel="stylesheet" href="estilo.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-</head>
-<body>
-  <!-- Header -->
-  <header class="site-header">
-    <div class="container header-content">
-      <nav class="top-nav left">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nosotros | Bit By Bit</title>
+    <link rel="stylesheet" href="estilo.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="site-header">
+      <div class="container header-content">
+        <nav class="top-nav left">
+          <ul>
+            <li class="nav-item"><a href="index.html">Inicio</a></li>
+            <li class="nav-item"><a href="#">Juegos</a></li>
+            <li class="nav-item"><a href="#">Periféricos</a></li>
+          </ul>
+        </nav>
+        <a href="index.html" class="logo">
+          <img src="img/Logo_2.png" alt="Bit By Bit logo" />
+        </a>
+        <nav class="top-nav right">
+          <ul>
+            <li class="nav-item"><a href="#">Coleccionables</a></li>
+            <li class="nav-item"><a href="#">Blog</a></li>
+            <li class="nav-item"><a href="Acerca de.html">Acerca de</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="container site-description">
+        <p>
+          Conocé más sobre quiénes somos y por qué amamos tanto los videojuegos.
+        </p>
+      </div>
+    </header>
+
+    <!-- Sección principal -->
+    <main class="container">
+      <section class="nosotros">
+        <h2>Sobre Nosotros</h2>
+        <p>
+          Bit By Bit nació como un proyecto de pasión por los videojuegos,
+          combinando nostalgia retro y la innovación actual. Nuestro objetivo es
+          conectar a las personas con sus recuerdos y nuevas experiencias
+          gaming.
+        </p>
+
+        <h3>Misión</h3>
+        <p>
+          Ofrecer productos de calidad y experiencias únicas a todos los amantes
+          del gaming clásico y moderno.
+        </p>
+
+        <h3>Visión</h3>
+        <p>
+          Ser la tienda líder en consolas retro y artículos coleccionables en
+          Centroamérica.
+        </p>
+
+        <h3>Valores</h3>
         <ul>
-          <li class="nav-item"><a href="index.html">Inicio</a></li>
-          <li class="nav-item"><a href="#">Juegos</a></li>
-          <li class="nav-item"><a href="#">Periféricos</a></li>
+          <li>Pasión por el gaming</li>
+          <li>Autenticidad</li>
+          <li>Compromiso con el cliente</li>
+          <li>Calidad garantizada</li>
         </ul>
-      </nav>
-      <a href="index.html" class="logo">
-        <img src="img/Logo_2.png" alt="Bit By Bit logo" />
-      </a>
-      <nav class="top-nav right">
+
+        <h3>¿Por qué elegirnos?</h3>
         <ul>
-          <li class="nav-item"><a href="#">Blog</a></li>
-          <li class="nav-item"><a href="nosotros.html">Nosotros</a></li>
-          <li class="nav-item"><a href="Mas.html">Más</a></li>
+          <li>Productos 100% originales</li>
+          <li>Ediciones limitadas y exclusivas</li>
+          <li>Atención personalizada</li>
+          <li>Envíos satisfactorios a todo el país</li>
         </ul>
-      </nav>
-    </div>
-    <div class="container site-description">
-      <p>Conocé más sobre quiénes somos y por qué amamos tanto los videojuegos.</p>
-    </div>
-  </header>
+      </section>
 
-  <!-- Sección principal -->
-  <main class="container">
-    <section class="nosotros">
-      <h2>Sobre Nosotros</h2>
-      <p>Bit By Bit nació como un proyecto de pasión por los videojuegos, combinando nostalgia retro y la innovación actual. Nuestro objetivo es conectar a las personas con sus recuerdos y nuevas experiencias gaming.</p>
+      <!-- Galería de productos -->
+      <section class="galeria">
+        <h2>Galería de Productos</h2>
+        <div class="galeria-grid">
+          <div class="producto-item">
+            <img src="img/atari.png" alt="Consola Atari" />
+            <p>Consola Atari 2600 clásica de colección.</p>
+          </div>
+          <div class="producto-item">
+            <img src="img/Zelda.png" alt="Zelda Ocarina of Time" />
+            <p>Videojuego Zelda Ocarina of Time para N64.</p>
+          </div>
+          <div class="producto-item">
+            <img src="img/Control_xbox.png" alt="Control Xbox" />
+            <p>Control original de Xbox Series X version Gears of War.</p>
+          </div>
+          <div class="producto-item">
+            <img src="img/Teclado_Gamer.png" alt="Teclado Gamer" />
+            <p>Teclado angry miao am afa r2.</p>
+          </div>
+          <div class="producto-item">
+            <img src="img/Figura_Pikachu.png" alt="Figura Pikachu" />
+            <p>Figura de Pikachu para colección</p>
+          </div>
+        </div>
+      </section>
 
-      <h3>Misión</h3>
-      <p>Ofrecer productos de calidad y experiencias únicas a todos los amantes del gaming clásico y moderno.</p>
+      <!-- Video -->
+      <section class="multimedia">
+        <h2>Descubre Nuestra Tienda</h2>
+        <video controls width="100%">
+          <source src="media/bitbybit_video.mp4" type="video/mp4" />
+          Tu navegador no soporta video HTML5.
+        </video>
+      </section>
 
-      <h3>Visión</h3>
-      <p>Ser la tienda líder en consolas retro y artículos coleccionables en Centroamérica.</p>
+      <!-- Testimonios -->
+      <section class="testimonios">
+        <h2>Testimonios de Clientes</h2>
+        <div class="testimonial-grid">
+          <blockquote>
+            <p>
+              "Compré una edición retro del SNES y fue como volver a mi
+              infancia. ¡Excelente atención!"
+            </p>
+            <footer>– Laura Méndez</footer>
+          </blockquote>
+          <blockquote>
+            <p>
+              "Lo mejor en coleccionables de Nintendo, llegó todo en perfecto
+              estado y rápido."
+            </p>
+            <footer>– Carlos Pérez</footer>
+          </blockquote>
+          <blockquote>
+            <p>
+              "Pedí un control edición limitada y todo salió perfecto. Muy buena
+              comunicación."
+            </p>
+            <footer>– Diego Rodríguez</footer>
+          </blockquote>
+        </div>
+      </section>
 
-      <h3>Valores</h3>
-      <ul>
-        <li>Pasión por el gaming</li>
-        <li>Autenticidad</li>
-        <li>Compromiso con el cliente</li>
-        <li>Calidad garantizada</li>
-      </ul>
+      <!-- Proyectos de Éxito -->
+      <section class="proyectos-exito">
+        <h2>Proyectos de Éxito</h2>
+        <ul>
+          <li>
+            <strong>Lanzamiento RetroFest 2024:</strong> Participamos en el
+            evento más grande de consolas clásicas del país.
+          </li>
+          <li>
+            <strong>Alianza con Coleccionistas CR:</strong> Distribuimos
+            artículos exclusivos de edición limitada.
+          </li>
+          <li>
+            <strong>Top Seller en Mercado Gamer:</strong> Alcanzamos más de
+            1,000 ventas en línea en menos de 6 meses.
+          </li>
+        </ul>
+      </section>
 
-      <h3>¿Por qué elegirnos?</h3>
-      <ul>
-        <li>Productos 100% originales</li>
-        <li>Ediciones limitadas y exclusivas</li>
-        <li>Atención personalizada</li>
-        <li>Envíos satisfactorios a todo el país</li>
-      </ul>
-    </section>
+      <!-- Evidencia de Trabajo y Experiencia -->
+      <section class="evidencia">
+        <h2>Nuestra Experiencia</h2>
+        <div class="evidencia-grid">
+          <div class="evidencia-item">
+            <img src="img/Paquete_seguro.jpg" alt="Paquete listo para envío" />
+            <p>Empaque profesional y seguro para todos nuestros envíos.</p>
+          </div>
+          <div class="evidencia-item">
+            <img src="img/Cliente_Feliz.jpg" alt="Cliente feliz con compra" />
+            <p>Clientes satisfechos con productos originales y de calidad.</p>
+          </div>
+          <div class="evidencia-item">
+            <img src="img/sega_stand.jpg" alt="Montaje de stand en feria" />
+            <p>Participación en eventos y ferias de coleccionismo gamer.</p>
+          </div>
+        </div>
+      </section>
+    </main>
 
+<<<<<<< HEAD
     <!-- Galería de productos -->
     <section class="galeria">
   <h2>Galería de Productos</h2>
@@ -163,4 +283,16 @@
     </div>
   </footer>
 </body>
+=======
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="container footer-content">
+        <a href="#"><img src="img/Instagram.png" alt="Instagram" /></a>
+        <span>Bit By Bit</span>
+        <a href="#"><img src="img/Facebook.png" alt="Facebook" /></a>
+        <span>Bit By Bit</span>
+      </div>
+    </footer>
+  </body>
+>>>>>>> 069269e74c20cf8dbb31ea1bdb466381d8af8c66
 </html>

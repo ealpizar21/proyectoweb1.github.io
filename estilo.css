@@ -387,7 +387,7 @@ body {
   font-size: 0.75rem;
   color: var(--text-light);
 }
-/* Estilo para "Más" */
+/* Estilo para "Acerca De" */
 .btn-regresar{
     display: inline-block;
     position: relative;
@@ -424,9 +424,10 @@ body {
   background-image: url(img/Logo_2.png);
   background-size: cover;
   background-position: center;
-  opacity: 0.3; 
+  opacity: 0.15; 
   z-index: -1;
 }
+<<<<<<< HEAD
 /* Fin de Más */
 
 /* Formulario */
@@ -496,3 +497,25 @@ textarea:invalid {
 #confirmacion:target {
   display: block;
 }
+=======
+
+.fila {
+  display: flex;
+  justify-content: space-between; /* separa los elementos */
+  padding: 1rem;
+  font-family: sans-serif;
+}
+
+.izquierda {
+  text-align: left;
+  font-family: var(--font-base);
+}
+
+.derecha {
+  text-align: left;
+  font-family: var(--font-base);
+  
+
+}
+/* Fin de "Acerca de */
+>>>>>>> 069269e74c20cf8dbb31ea1bdb466381d8af8c66
