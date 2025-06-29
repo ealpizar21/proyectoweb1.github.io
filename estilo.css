@@ -427,8 +427,25 @@ body {
   opacity: 0.15; 
   z-index: -1;
 }
-<<<<<<< HEAD
-/* Fin de Más */
+.fila {
+  display: flex;
+  justify-content: space-between; /* separa los elementos */
+  padding: 1rem;
+  font-family: sans-serif;
+}
+
+.izquierda {
+  text-align: left;
+  font-family: var(--font-base);
+}
+
+.derecha {
+  text-align: left;
+  font-family: var(--font-base);
+  
+
+}
+/* Fin de "Acerca de */
 
 /* Formulario */
 .formulario-contacto {
@@ -497,25 +514,4 @@ textarea:invalid {
 #confirmacion:target {
   display: block;
 }
-=======
 
-.fila {
-  display: flex;
-  justify-content: space-between; /* separa los elementos */
-  padding: 1rem;
-  font-family: sans-serif;
-}
-
-.izquierda {
-  text-align: left;
-  font-family: var(--font-base);
-}
-
-.derecha {
-  text-align: left;
-  font-family: var(--font-base);
-  
-
-}
-/* Fin de "Acerca de */
->>>>>>> 069269e74c20cf8dbb31ea1bdb466381d8af8c66
