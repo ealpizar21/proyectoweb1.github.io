@@ -381,4 +381,44 @@ body {
   font-size: 0.75rem;
   color: var(--text-light);
 }
+/* Estilo para "Más" */
+.btn-regresar{
+    display: inline-block;
+    position: relative;
+    top: 20px;            
+    left: 20px;
+    color:var(--text-light);
+    background:#6c4fb8;
+    font-size: 1rem;
+     text-transform: uppercase;
+     font-family: var(--font-base);
+    padding: 0.6rem 1.2rem;
+     border: none;
+     border-radius: 4px;
+     cursor: pointer;
+     transition: background 0.2s ease, transform 0.1s ease;
+     z-index: 1000;   
+}
+.btn-regresar :hover{
+    color: var(--accent-green);
+}
+.Imagen-transparente {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
 
+.Imagen-transparente::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url(img/Logo_2.png);
+  background-size: cover;
+  background-position: center;
+  opacity: 0.3; 
+  z-index: -1;
+}
+/* Fin de Más */
