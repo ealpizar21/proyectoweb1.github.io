@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contacto | Bit By Bit</title>
+  <link rel="stylesheet" href="estilo.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-content">
+      <nav class="top-nav left">
+        <ul>
+          <li class="nav-item"><a href="index.html">Inicio</a></li>
+          <li class="nav-item"><a href="nosotros.html">Nosotros</a></li>
+        </ul>
+      </nav>
+      <a href="index.html" class="logo">
+        <img src="img/Logo_2.png" alt="Bit By Bit logo" />
+      </a>
+      <nav class="top-nav right">
+        <ul>
+          <li class="nav-item"><a href="blog.html">Blog</a></li>
+          <li class="nav-item"><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="container site-description">
+      <p>¿Tienes dudas o sugerencias? ¡Escríbenos!</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Datos de contacto -->
+    <section class="info-contacto">
+      <h2>Contáctanos</h2>
+      <p><strong>Teléfono:</strong> +506 6357-5896</p>
+      <p><strong>Dirección:</strong> Alajuela, Costa Rica</p>
+      <p><strong>Horario de atención:</strong> Lunes a Sábado – 9:00 am a 6:00 pm</p>
+    </section>
+
+    <!-- Formulario-->
+    <section class="formulario-contacto">
+      <h2>Formulario de Contacto</h2>
+      <form action="#confirmacion">
+        <div class="form-grid">
+
+          <div class="form-item">
+            <label for="nombre">Nombre completo:</label>
+            <input type="text" id="nombre" name="nombre" required>
+            <span class="error">Por favor ingresa tu nombre.</span>
+          </div>
+
+          <div class="form-item">
+            <label for="correo">Correo electrónico:</label>
+            <input type="email" id="correo" name="correo" required>
+            <span class="error">Introduce un email válido.</span>
+          </div>
+
+          <div class="form-item">
+            <label for="telefono">Teléfono (8888-8888):</label>
+            <input type="tel" id="telefono" name="telefono" pattern="^\d{4}-\d{4}$" required>
+            <span class="error">Formato requerido: 8888-8888.</span>
+          </div>
+
+          <div class="form-item">
+            <label for="motivo">Motivo del contacto:</label>
+            <select id="motivo" name="motivo" required>
+              <option value="">-- Selecciona --</option>
+              <option value="consulta">Consulta general</option>
+              <option value="compra">Información sobre compra</option>
+              <option value="soporte">Soporte técnico</option>
+            </select>
+            <span class="error">Selecciona un motivo.</span>
+          </div>
+
+          <div class="form-item">
+            <label>¿Prefiere ser contactado por?:</label>
+            <div class="radio-group">
+              <label><input type="radio" name="preferencia" value="email" checked> Correo</label>
+              <label><input type="radio" name="preferencia" value="telefono"> Teléfono</label>
+            </div>
+          </div>
+
+          <div class="form-item">
+            <label for="mensaje">Mensaje:</label>
+            <textarea id="mensaje" name="mensaje" rows="4" required></textarea>
+            <span class="error">El mensaje no puede quedar vacío.</span>
+          </div>
+
+        </div>
+
+        <div style="text-align: center; margin-top: 1rem;">
+          <button class="btn-buy" type="submit">Enviar Mensaje</button>
+        </div>
+      </form>
+
+      <!-- Confirmación -->
+      <div id="confirmacion" class="mensaje-confirmacion">
+        <p>✅ ¡Gracias por contactarnos! Tu mensaje fue enviado correctamente.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer-->
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <a href="#"><img src="img/Instagram.png" alt="Instagram" /></a>
+      <span>Bit By Bit</span>
+      <a href="#"><img src="img/Facebook.png" alt="Facebook" /></a>
+      <span>Bit By Bit</span>
+    </div>
+  </footer>
+
+  <!-- Hecho con JavaScript -->
+  <!-- Script: inserta automáticamente un guión en el campo Teléfono tras los primeros 4 dígitos -->
+<script>
+  document.getElementById('telefono').addEventListener('input', function() {
+    // 1) Eliminar todo lo que no sea dígito y quedarnos con los primeros 8 caracteres
+    let v = this.value.replace(/\D/g, '').slice(0, 8);
+    // 2) Si ya hay más de 4, insertar el guión entre los bloques de 4 dígitos
+    if (v.length > 4) {
+      v = v.slice(0, 4) + '-' + v.slice(4);
+    }
+    // 3) Actualizar el valor del campo
+    this.value = v;
+  });
+</script>
+</body>
+</html>
