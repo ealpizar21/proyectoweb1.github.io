@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Preguntas Frecuentes | Bit By Bit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="estilo.css"/>
+  <style>
+    /* Estilos específicos para FAQ más bonito */
+    .faq-container {
+      padding: 2rem 0;
+    }
+    .faq-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .faq-header h1 {
+      font-size: 1.8rem;
+      border-bottom: 4px solid var(--accent-green);
+      display: inline-block;
+      padding-bottom: 0.5rem;
+    }
+    .faq-list {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+    .faq-item {
+      background: var(--purple);
+      border: 2px solid var(--accent-green);
+      border-radius: 8px;
+      padding: 1rem;
+      transition: transform 0.2s;
+    }
+    .faq-item:hover {
+      transform: translateY(-4px);
+    }
+    .faq-item h2 {
+      font-size: 1.1rem;
+      color: var(--accent-green);
+      margin-bottom: 0.5rem;
+    }
+    .faq-item p,
+    .faq-item ul,
+    .faq-item ol {
+      font-size: 0.85rem;
+      line-height: 1.5;
+      margin-bottom: 0.75rem;
+    }
+    .faq-item a {
+      color: var(--accent-green);
+      text-decoration: underline;
+    }
+    .faq-item ul li,
+    .faq-item ol li {
+      margin-left: 1rem;
+      margin-bottom: 0.3rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-content">
+      <input id="menu-toggle" class="menu-toggle" type="checkbox"/>
+      <label for="menu-toggle" class="menu-icon">&#9776;</label>
+      <a href="index.html" class="logo"><img src="img/Logo_2.png" alt="Logo Bit By Bit"/></a>
+      <nav class="responsive-nav">
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="container site-description">
+      <p>Resuelve tus dudas más comunes sobre Bit By Bit</p>
+    </div>
+  </header>
+
+  <!-- FAQ -->
+  <main class="container faq-container">
+    <div class="faq-header">
+      <h1>Preguntas Frecuentes (FAQ)</h1>
+    </div>
+
+    <div class="faq-list">
+      <div class="faq-item">
+        <h2>1. ¿Qué productos se pueden comprar en Bit By Bit?</h2>
+        <p><strong>Bit By Bit</strong> ofrece una gran variedad de artículos relacionados con el mundo gamer:</p>
+        <ul>
+          <li><em>Consolas de última generación</em></li>
+          <li><em>Juegos físicos y digitales</em></li>
+          <li><em>Accesorios como teclados, controles y headsets</em></li>
+          <li><em>Figuras y coleccionables</em></li>
+        </ul>
+      </div>
+
+      <div class="faq-item">
+        <h2>2. ¿Cómo puedo hacer un pedido?</h2>
+        <p>El proceso es <u>rápido</u> y seguro. Sigue estos pasos:</p>
+        <ol>
+          <li><strong>Regístrate</strong> o inicia sesión.</li>
+          <li>Añade artículos al carrito.</li>
+          <li>Selecciona <em>método de pago</em>.</li>
+          <li>Confirma tu dirección y ¡listo!</li>
+        </ol>
+      </div>
+
+      <div class="faq-item">
+        <h2>3. ¿Hacen envíos internacionales?</h2>
+        <p><u>No por ahora.</u> Actualmente nuestras entregas cubren solo Costa Rica. Pronto añadiremos Centroamérica.</p>
+      </div>
+
+      <div class="faq-item">
+        <h2>4. ¿Qué métodos de pago aceptan?</h2>
+        <p>Aceptamos:</p>
+        <ul>
+          <li>Tarjetas (Visa, MasterCard, AMEX)</li>
+          <li><strong>PayPal</strong></li>
+          <li>Sinpe Móvil</li>
+        </ul>
+      </div>
+
+      <div class="faq-item">
+        <h2>5. ¿Dónde encuentro las noticias completas?</h2>
+        <p>Visita nuestra sección de <a href="blog.html"><strong>Blog</strong></a> para leer:</p>
+        <ul>
+          <li>Lanzamientos de videojuegos</li>
+          <li>Eventos y torneos</li>
+          <li>Ofertas exclusivas</li>
+        </ul>
+      </div>
+
+      <div class="faq-item">
+        <h2>6. ¿Qué hago si tengo problemas con mi pedido?</h2>
+        <p>Contáctanos a través de:</p>
+        <ul>
+          <li><a href="mailto:soporte@bitbybit.com">soporte@bitbybit.com</a></li>
+          <li>WhatsApp: <strong>+506 8888‑0000</strong></li>
+          <li>Formulario en <a href="contacto.html">Contacto</a></li>
+        </ul>
+        <p><em>Horario: L‑V 8 a.m.‑6 p.m.</em></p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <a href="#"><img src="img/Instagram.png" alt="Instagram"/></a>
+      <span>Bit By Bit</span>
+      <a href="#"><img src="img/Facebook.png" alt="Facebook"/></a>
+      <span>Bit By Bit</span>
+    </div>
+  </footer>
+</body>
+</html>
