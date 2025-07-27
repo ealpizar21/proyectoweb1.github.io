@@ -427,6 +427,16 @@ body {
   font-family: var(--font-base);
 }
 
+/* Fotos de autor uniformes */
+.foto-autor {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid var(--accent-green);
+  margin-bottom: 0.5rem;
+}
+
 /* Fin de "Acerca de */
 
 /* Formulario */
