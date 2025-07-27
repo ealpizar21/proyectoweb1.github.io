@@ -923,3 +923,42 @@ textarea:invalid {
 .container[style] {
   padding-bottom: 2rem;
 }
+
+/* -------- Carrusel uniforme -------- */
+#promoCarousel .carousel-item img {
+  width: 100%;
+  height: 400px;       /* Altura fija: ajusta si lo deseas */
+  object-fit: cover;   /* Recorta centrado sin distorsionar */
+}
+
+/* Adaptar imágenes al carrusel sin recortarlas */
+#promoCarousel .carousel-inner img {
+  width: 100%;          /* ocupar todo el ancho del carrusel */
+  height: 250px;        /* altura fija acorde al carrusel */
+  object-fit: contain;  /* escala la imagen para que quepa completa */
+  background: #6c4fb8;     /* fondo oscuro si hay espacio sobrante */
+}
+
+/* Reubicar caption debajo de la imagen */
+#promoCarousel .carousel-item img {
+  width: 100%;
+  height: 250px;        /* o la altura que prefieras */
+  object-fit: contain;  /* ajusta completa sin recortes */
+}
+#promoCarousel .carousel-caption {
+  position: static !important;   /* quita el posicionamiento absoluto */
+  transform: none !important;
+  margin-top: 0.5rem;            /* separa un poco de la imagen */
+  background: transparent;       /* sin fondo semitransparente */
+  color: var(--text-light);      /* mantiene tu color de texto */
+  text-align: center;            /* centra el texto */
+  padding: 0;                    /* elimina padding extra */
+}
+
+/* Borde para el carrusel */
+#promoCarousel {
+  border: 4px solid var(--accent-green);
+  border-radius: 8px;
+  overflow: hidden; /* para que las flechas y las imágenes no sobresalgan */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* opcional: sombra suave */
+}
