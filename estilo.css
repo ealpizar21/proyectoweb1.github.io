@@ -923,3 +923,53 @@ textarea:invalid {
 .container[style] {
   padding-bottom: 2rem;
 }
+/*Productos en inicio*/
+.contenedor-inicio {
+  width: 100%;
+  height: 100%;
+  background-color: #2e1c5b;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+.contenedor-titulos {
+  position: relative;
+  width: 45%;
+  border-radius: 10px;
+  padding: 20px;
+  color: white;
+  display: flex;
+}
+.izq {
+  justify-content: flex-start;
+}
+
+.cen {
+  justify-content: center;
+}
+
+.der {
+  justify-content: flex-end;
+}
+.envoltorio_img {
+  display: flex;
+  width: 45%;
+  margin-top: 40px;
+  margin-left: 40px;
+}
+.envoltorio {
+  display: flex;
+  width: 45%;
+  position: top;
+}
+.titulo-inicio {
+  position: absolute;
+  top: -150px;
+  left: 220px;
+  margin: 0;
+  font-size: 2em;
+}
+/*Fin de Productos en inicio*/
