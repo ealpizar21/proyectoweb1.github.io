@@ -1,83 +1,194 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Zelda: Ocarina of Time | Bit By Bit</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="estilo.css" />
-</head>
-<body>
-  <header class="site-header">
-    <div class="container header-content">
-      <input type="checkbox" id="menu-toggle" class="menu-toggle" />
-      <label for="menu-toggle" class="menu-icon">&#9776;</label>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zelda: Ocarina of Time | Bit By Bit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="estilo.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-content">
+        <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+        <label for="menu-toggle" class="menu-icon">&#9776;</label>
 
-      <a href="index.html" class="logo">
-        <img src="img/Logo_2.png" alt="Bit By Bit logo" />
-      </a>
+        <a href="index.html" class="logo">
+          <img src="img/Logo_2.png" alt="Bit By Bit logo" />
+        </a>
 
-      <nav class="responsive-nav">
-        <ul>
-          <li><a href="#">Consolas</a></li>
-          <li><a href="#">Juegos</a></li>
-          <li><a href="#">Periféricos</a></li>
-          <li><a href="PregFrec.html">Preguntas Frecuentes</a></li>
-          <li><a href="blog.html">Blog</a></li>
-          <li><a href="Acerca de.html">Acerca de</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
-  <main class="container">
-    <div class="Imagen-transparente">
-      <section class="productos-destacados">
-        <h1 class="news-title">The Legend of Zelda: Ocarina of Time</h1>
-
-        <div class="grid">
-          <article class="card">
-            <div class="card-image">
-              <img src="img/Zelda.png" alt="Zelda: Ocarina of Time" />
-            </div>
-          </article>
-        </div>
-
-        <section class="news-section">
-          <h2><u>Principales características</u></h2>
-          <ul class="news-list">
-            <li><strong>Plataformas:</strong> Nintendo 64 (1998), GameCube, Wii, Wii U, 3DS, Switch Online.</li>
-            <li><strong>Género:</strong> Aventura / Acción en tercera persona. Exploración, combate y puzles en un mundo abierto.</li>
-            <li><strong>Jugabilidad:</strong> Sistema <em>Z-targeting</em>, mecánicas de viaje en el tiempo, montura con Epona.</li>
-            <li><strong>Gráficos y sonido:</strong> Primer Zelda en 3D, banda sonora de Koji Kondo, efectos de clima y día/noche.</li>
+        <nav class="responsive-nav">
+          <ul>
+            <li><a href="#">Consolas</a></li>
+            <li><a href="#">Juegos</a></li>
+            <li><a href="#">Periféricos</a></li>
+            <li><a href="PregFrec.html">Preguntas Frecuentes</a></li>
+            <li><a href="blog.html">Blog</a></li>
+            <li><a href="Acerca de.html">Acerca de</a></li>
           </ul>
-        </section>
+        </nav>
+      </div>
+    </header>
 
-        <section class="news-section fila">
-          <span class="izquierda">
-            <h2>Precio anterior: <s>₡144.204</s><br>Precio especial: <span style="color: var(--accent-green)">₡132.500</span></h2>
-          </span>
-          <span class="derecha">
-            <button class="btn-Comprar">Comprar</button>
-          </span>
-        </section>
+    <main class="container">
+      <div class="Imagen-transparente">
+        <section class="productos-destacados">
+          <h1 class="news-title">The Legend of Zelda: Ocarina of Time</h1>
 
+          <section class="container mb-5">
+            <div
+              id="imgCarousel"
+              class="carousel slide"
+              data-bs-ride="carousel"
+              data-bs-interval="3000"
+            >
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <img
+                    src="img/Zelda.png"
+                    class="d-block w-100"
+                    alt="Zelda Ocarina of Time"
+                  />
+                </div>
+                <div class="carousel-item">
+                  <img
+                    src="img/s-l640 (1).jpg"
+                    class="d-block w-100"
+                    alt="zelda promo"
+                  />
+                </div>
+              </div>
+              <button
+                class="carousel-control-prev"
+                type="button"
+                data-bs-target="#imgCarousel"
+                data-bs-slide="prev"
+              >
+                <span
+                  class="carousel-control-prev-icon"
+                  aria-hidden="true"
+                ></span>
+                <span class="visually-hidden">Anterior</span>
+              </button>
+              <button
+                class="carousel-control-next"
+                type="button"
+                data-bs-target="#imgCarousel"
+                data-bs-slide="next"
+              >
+                <span
+                  class="carousel-control-next-icon"
+                  aria-hidden="true"
+                ></span>
+                <span class="visually-hidden">Siguiente</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="news-section">
+            <h2><u>Principales características</u></h2>
+            <ul class="news-list">
+              <li>
+                <strong>Plataformas:</strong> Nintendo 64 (1998), GameCube, Wii,
+                Wii U, 3DS, Switch Online.
+              </li>
+              <li>
+                <strong>Género:</strong> Aventura / Acción en tercera persona.
+                Exploración, combate y puzles en un mundo abierto.
+              </li>
+              <li>
+                <strong>Jugabilidad:</strong> Sistema <em>Z-targeting</em>,
+                mecánicas de viaje en el tiempo, montura con Epona.
+              </li>
+              <li>
+                <strong>Gráficos y sonido:</strong> Primer Zelda en 3D, banda
+                sonora de Koji Kondo, efectos de clima y día/noche.
+              </li>
+            </ul>
+          </section>
+
+          <section class="news-section fila">
+            <span class="izquierda">
+              <h2>
+                Precio anterior: <s>₡144.204</s><br />Precio especial:
+                <span style="color: var(--accent-green)">₡132.500</span>
+              </h2>
+            </span>
+            <span class="derecha">
+              <button class="btn-Comprar">Comprar</button>
+            </span>
+          </section>
+          <section class="news-section fila">
+            <span class="izquierda">
+              <p>Stock: Disponible</p>
+            </span>
+          </section>
+          <section class="news-section fila">
+            <span class="izquierda">
+              <p>Tiempo de entrega: 3 días</p>
+            </span>
+            <span class="derecha">
+              <p>Costo por envío: ₡1.500</p>
+            </span>
+          </section>
+        </section>
+        <!-- Zona de valoración-->
+        <section class="container">
+          <h2>Valoración</h2>
+          <form id="ratingForm">
+            <div class="stars">
+              <input type="radio" name="rating" id="star5" value="5" />
+              <label for="star5">★</label>
+              <input type="radio" name="rating" id="star4" value="4" />
+              <label for="star4">★</label>
+              <input type="radio" name="rating" id="star3" value="3" />
+              <label for="star3">★</label>
+              <input type="radio" name="rating" id="star2" value="2" />
+              <label for="star2">★</label>
+              <input type="radio" name="rating" id="star1" value="1" />
+              <label for="star1">★</label>
+            </div>
+            <textarea
+              style="height: 50px"
+              name="Usuario"
+              placeholder="Nombre de usuario"
+            ></textarea>
+            <textarea
+              name="comentario"
+              placeholder="Escribe tu comentario aquí..."
+            ></textarea>
+            <button type="submit">Enviar valoración</button>
+          </form>
+          <div class="resultado" id="resultado"></div>
+          <div id="comentarios">
+            <h3>Comentarios anteriores</h3>
+            <!-- Aquí se cargarán los comentarios automáticamente -->
+          </div>
+        </section>
         <div class="back-link">
           <a href="blog.html">&larr; Volver al blog</a>
         </div>
-      </section>
-    </div>
-  </main>
+      </div>
+    </main>
 
-  <footer class="site-footer">
-    <div class="container footer-content">
-      <a href="#"><img src="img/Instagram.png" alt="Instagram" /></a>
-      <span>Bit By Bit</span>
-      <a href="#"><img src="img/Facebook.png" alt="Facebook" /></a>
-      <span>Bit By Bit</span>
-    </div>
-  </footer>
-</body>
+    <footer class="site-footer">
+      <div class="container footer-content">
+        <a href="#"><img src="img/Instagram.png" alt="Instagram" /></a>
+        <span>Bit By Bit</span>
+        <a href="#"><img src="img/Facebook.png" alt="Facebook" /></a>
+        <span>Bit By Bit</span>
+      </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="JS/Scripts.js"></script>
+  </body>
 </html>
