@@ -972,3 +972,174 @@ textarea:invalid {
   overflow: hidden; /* para que las flechas y las imágenes no sobresalgan */
   box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* opcional: sombra suave */
 }
+
+/* ===========================
+   Animaciones y micro-UX
+   =========================== */
+
+/* Respeta preferencia de reducir movimiento */
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .producto-card,
+  .galeria img,
+  .btn-Comprar,
+  .btn-VM,
+  .btn-buy {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Animación de aparición (fade-up) */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Sutil pulso de borde verde para destacar cards en hover */
+@keyframes pulseBorder {
+  0%   { box-shadow: 0 0 0 0 rgba(57,255,20,0.0); }
+  70%  { box-shadow: 0 0 12px 6px rgba(57,255,20,0.06); }
+  100% { box-shadow: 0 0 0 0 rgba(57,255,20,0.0); }
+}
+
+/* Card: elevación, transición y pequeño tilt */
+.producto-card {
+  animation: fadeUp 420ms cubic-bezier(.2,.9,.2,1) both;
+  will-change: transform, opacity;
+}
+
+.producto-card .card {
+  transition: transform 260ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms, border-color 220ms;
+  transform-origin: center;
+  backface-visibility: hidden;
+  perspective: 1000px;
+  border: 4px solid var(--accent-green); /* ya lo usas pero nos aseguramos */
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+}
+
+/* Hover: levantar y rotar ligeramente, borde animado */
+.producto-card .card:hover {
+  transform: translateY(-10px) rotateX(4deg) scale(1.02);
+  animation: pulseBorder 1.2s ease-in-out;
+}
+
+/* Imagen de tarjeta: zoom-on-hover */
+.producto-card .card-image img {
+  transition: transform 320ms cubic-bezier(.2,.9,.2,1), filter 260ms;
+  transform-origin: center;
+  border-radius: 6px;
+}
+.producto-card .card:hover .card-image img {
+  transform: scale(1.06) translateY(-4px);
+  filter: saturate(1.05);
+}
+
+/* Botones: micro-interacción */
+.btn-Comprar, .btn-VM, .btn-buy {
+  transition: transform 140ms ease, box-shadow 140ms ease, background 140ms ease;
+  will-change: transform;
+}
+.btn-Comprar:hover, .btn-VM:hover, .btn-buy:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.35);
+}
+
+/* Efecto de foco accesible (teclado) */
+.producto-card .card:focus-within,
+.producto-card .card:focus {
+  outline: 3px dashed rgba(57,255,20,0.18);
+  outline-offset: 6px;
+}
+
+/* Estrellas animadas (promedio) */
+.estrella {
+  display:inline-block;
+  transform-origin: center;
+  transition: transform 160ms cubic-bezier(.2,.9,.2,1);
+}
+.estrella:hover {
+  transform: scale(1.2) translateY(-2px);
+  filter: drop-shadow(0 4px 6px rgba(57,255,20,0.16));
+}
+
+/* Lightbox (galería ampliada) */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(14,9,30,0.85);
+  z-index: 9999;
+  padding: 2rem;
+}
+.lightbox.open { display: flex; }
+.lightbox .lb-img {
+  max-width: 92%;
+  max-height: 86%;
+  border-radius: 8px;
+  box-shadow: 0 24px 48px rgba(0,0,0,0.6);
+  border: 6px solid rgba(92,68,158,0.85);
+}
+.lightbox .lb-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  color: var(--accent-green);
+  border: 2px solid var(--accent-green);
+  padding: 0.35rem 0.5rem;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 120ms;
+}
+.lightbox .lb-close:hover { transform: translateY(-3px); }
+
+/* Galería del detalle: apuntar que las miniaturas se vean interactivas */
+.galeria img {
+  cursor: zoom-in;
+  transition: transform 220ms, box-shadow 220ms;
+}
+.galeria img:hover { transform: translateY(-6px) scale(1.04); box-shadow: 0 10px 24px rgba(0,0,0,0.45); }
+
+/* Pequeño efecto extra en encabezados para parejas (más animación) */
+.productos-destacados h2 {
+  position: relative;
+}
+.productos-destacados h2::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  transform: translateX(-50%);
+  width: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent-green), var(--purple-light));
+  transition: width 520ms cubic-bezier(.2,.9,.2,1);
+}
+.productos-destacados h2:hover::before { width: 140px; }
+
+/* Ajustes responsive: que no se rompa el tilt en pantallas pequeñas */
+@media (max-width: 480px) {
+  .producto-card .card:hover { transform: translateY(-6px) scale(1.01); }
+  .producto-card .card { box-shadow: 0 6px 14px rgba(0,0,0,0.36); }
+}
+
+.btn-eliminar {
+  background: transparent;
+  color: var(--text-light);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-family: var(--font-base);
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: background 130ms, transform 120ms;
+}
+.btn-eliminar:hover {
+  background: rgba(255,0,0,0.12);
+  transform: translateY(-2px);
+  color: #fff;
+}

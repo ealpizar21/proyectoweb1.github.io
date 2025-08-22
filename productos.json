@@ -1,0 +1,82 @@
+{
+  "coleccionables": [
+    {
+      "id": 1,
+      "nombre": "Figura Link Edición Especial",
+      "precio": 15000.0,
+      "categoria": "figuras",
+      "stock": "Disponible online y en tienda",
+      "descripcion": "Figura de acción de Link (The Legend of Zelda) edición especial con detalles pintados a mano.",
+      "imagenes": [
+        "img/linkColeccionable_Adelante.png",
+        "img/LinkColeccionable_Atras.png"
+      ],
+      "entrega": "3-5 días hábiles",
+      "envio": "₡3500",
+      "reseñas": [
+        {
+          "usuario": "Carlos",
+          "comentario": "Excelente calidad, muy detallada.",
+          "puntuacion": 5
+        },
+        {
+          "usuario": "Andrea",
+          "comentario": "Vale cada colón, se ve genial en mi colección.",
+          "puntuacion": 4
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "nombre": "Funko Pop Kratos de God of War",
+      "precio": 10500.0,
+      "categoria": "figuras",
+      "stock": "Disponible solo online",
+      "descripcion": "Funko Pop de Kratos con diseño clásico, ideal para coleccionistas de god of war.",
+      "imagenes": [
+        "img/funkoKratos.png",
+        "img/FunkoKratos_Caja.png"
+      ],
+      "entrega": "2-4 días hábiles",
+      "envio": "₡2500",
+      "reseñas": [
+        {
+          "usuario": "Diego",
+          "comentario": "Muy bonito, llegó rápido.",
+          "puntuacion": 5
+        },
+        {
+          "usuario": "Laura",
+          "comentario": "El empaque estaba un poco dañado pero la figura intacta.",
+          "puntuacion": 3
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "nombre": "Poster Retro Mario Bros",
+      "precio": 12000.0,
+      "categoria": "posters",
+      "stock": "Disponible en tienda física",
+      "descripcion": "Poster retro de Mario Bros de los años 90, tamaño 50x70 cm, impresión en papel de alta calidad.",
+      "imagenes": [
+        "img/PosterMarioRetro.png",
+        "img/PosterMarioNegro.png"
+      ],
+      "entrega": "Disponible para recoger en tienda",
+      "envio": "No disponible",
+      "reseñas": [
+        {
+          "usuario": "Sofía",
+          "comentario": "Se ve increíble en mi pared.",
+          "puntuacion": 5
+        },
+        {
+          "usuario": "Luis",
+          "comentario": "La impresión es buena, pero esperaba un marco.",
+          "puntuacion": 4
+        }
+      ]
+    }
+  ]
+}

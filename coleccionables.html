@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Coleccionables - Tienda Retro</title>
+  <link rel="stylesheet" href="estilo.css">
+  <style>
+    .stars { font-size: 1rem; color: var(--accent-green); }
+    .producto-card .card { height: 100%; display:flex; flex-direction:column; justify-content:space-between; }
+    .card .precio { font-weight: bold; margin: 0.5rem 0; }
+    .filtro-wrap { display:flex; gap:0.75rem; align-items:center; margin:1rem 0; flex-wrap:wrap; }
+    #catalogo p { color: #ddd; text-align:center; padding:1rem; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+  <div class="container header-content">
+    <!-- Botón hamburguesa -->
+    <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+    <label for="menu-toggle" class="menu-icon" aria-hidden="true">&#9776;</label>
+
+    <!-- Logo centrado -->
+    <a href="index.html" class="logo" aria-label="Ir al inicio">
+      <img src="img/Logo_2.png" alt="Bit By Bit logo" />
+    </a>
+
+    <!-- Menú combinado (misma estructura que en index) -->
+    <nav class="responsive-nav" aria-label="Menú principal">
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="#">Consolas</a></li>
+        <li><a href="#">Juegos</a></li>
+        <li><a href="#">Periféricos</a></li>
+        <!-- Marca 'Coleccionables' como página activa -->
+        <li><a href="coleccionables.html" class="active" aria-current="page">Coleccionables</a></li>
+        <li><a href="PregFrec.html">Preguntas Frecuentes</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="Acerca de.html">Acerca de</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+  <main class="container">
+    <section class="productos-destacados">
+      <h2>Coleccionables</h2>
+
+      <div class="filtro-wrap">
+        <label for="filtroCategoria">Filtrar por:</label>
+        <select id="filtroCategoria" aria-label="Filtrar por categoría">
+          <option value="todos">Todos</option>
+          <option value="figuras">Figuras</option>
+          <option value="posters">Posters</option>
+        </select>
+        <input id="buscar" type="search" placeholder="Buscar nombre..." aria-label="Buscar productos">
+      </div>
+
+      <div id="catalogo" class="grid"></div>
+    </section>
+  </main>
+
+ <footer class="site-footer">
+  <div class="container footer-content">
+    <a href="https://www.instagram.com" aria-label="Instagram">
+      <img src="img/Instagram.png" alt="Instagram" />
+    </a>
+
+    <span>Bit By Bit</span>
+
+    <a href="https://www.facebook.com/?locale=es_LA" aria-label="Facebook">
+      <img src="img/Facebook.png" alt="Facebook" />
+    </a>
+
+    <span>Bit By Bit</span>
+  </div>
+</footer>
+
+
+  <script src="script.js"></script>
+</body>
+</html>
