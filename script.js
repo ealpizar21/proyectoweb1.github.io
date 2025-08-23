@@ -420,4 +420,38 @@ if (document.getElementById("detalleProducto")) {
   });
 })();
 
+
+ 
+      (function () {
+        const LS_KEY = 'carrito_demo';
+        const BADGE = document.getElementById('cartCount');
+
+        function getCartQty() {
+          try {
+            const cart = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
+            return cart.reduce((s, i) => s + (Number(i.cantidad) || 0), 0);
+          } catch (e) {
+            return 0;
+          }
+        }
+
+        function updateBadge(animate = false) {
+          if (!BADGE) return;
+          const qty = getCartQty();
+          BADGE.textContent = qty;
+          if (animate) {
+            BADGE.classList.remove('cart-widget__badge--pulse');
+            void BADGE.offsetWidth;
+            BADGE.classList.add('cart-widget__badge--pulse');
+          }
+        }
+
+        // Inicial
+        document.addEventListener('DOMContentLoaded', () => updateBadge(false));
+
+        // Escuchar cambios en storage (otras pestañas) y evento custom
+        window.addEventListener('storage', (e) => { if (e.key === LS_KEY) updateBadge(false); });
+        window.addEventListener('cart:triggerUpdate', () => updateBadge(true));
+        window.addEventListener('cart:update', () => updateBadge(false));
+      })();
 /* ================= End of script.js ================= */

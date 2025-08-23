@@ -1143,3 +1143,104 @@ textarea:invalid {
   transform: translateY(-2px);
   color: #fff;
 }
+
+
+/* Modal confirmación añadir al carrito */
+.modal-confirm { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; z-index: 9999; font-family: var(--font-base); }
+.modal-confirm.open { display: flex; }
+.modal-confirm__backdrop { position:absolute; inset:0; background: rgba(0,0,0,0.6); backdrop-filter: blur(2px); }
+.modal-confirm__card { position: relative; z-index: 2; background: var(--purple); border: 3px solid var(--accent-green); box-shadow: 0 24px 48px rgba(0,0,0,0.6); border-radius: 10px; padding: 1rem; max-width: 720px; width: 92%; }
+.modal-confirm__close { position:absolute; top:8px; right:8px; background: transparent; border: 1px solid var(--accent-green); color: var(--text-light); padding: 0.25rem 0.5rem; border-radius:6px; cursor:pointer; }
+.modal-confirm__content { display:flex; gap:1rem; align-items:center; }
+.modal-confirm__img { width:120px; height:120px; object-fit:cover; border-radius:8px; border: 2px solid var(--accent-green); }
+.modal-confirm__info h3 { margin:0 0 0.35rem 0; font-size:1rem; }
+.modal-confirm__info p { margin:0 0 0.8rem 0; font-size:0.9rem; color:#ddd; }
+.modal-confirm__actions { display:flex; gap:0.6rem; }
+.modal-confirm__actions .btn-Comprar, .modal-confirm__actions .btn-VM { min-width:140px; }
+@media (max-width:600px) {
+  .modal-confirm__content { flex-direction:column; align-items:center; text-align:center; }
+  .modal-confirm__img { width:140px; height:140px; }
+}
+/* Fin de animaciones y micro-UX */
+
+/* ---------------- Cart widget styling (estilo.css) ---------------- */
+.cart-widget {
+  display: inline-block;
+  position: relative;
+  margin-left: 0.6rem;
+  font-family: var(--font-base);
+}
+
+/* En header lo ubicamos a la derecha (si tu header usa posicionamiento) */
+.site-header .cart-widget {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+}
+
+/* Link */
+.cart-widget__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  text-decoration: none;
+  color: var(--text-light);
+  background: rgba(255,255,255,0.03);
+  padding: 0.25rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.04);
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms;
+}
+.cart-widget__link:focus,
+.cart-widget__link:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.45);
+  background: rgba(57,255,20,0.06);
+}
+
+/* Icon */
+.cart-widget__icon {
+  width: 20px;
+  height: 20px;
+  color: var(--text-light);
+  opacity: 0.95;
+  display:block;
+}
+
+/* Badge */
+.cart-widget__badge {
+  display: inline-block;
+  min-width: 22px;
+  height: 22px;
+  line-height: 22px;
+  padding: 0 6px;
+  background: var(--accent-green);
+  color: var(--purple-dark);
+  font-weight: 700;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  text-align: center;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  transition: transform 260ms cubic-bezier(.2,.9,.2,1), box-shadow 200ms;
+}
+
+/* Pulse animation when item added */
+@keyframes cartBadgePulse {
+  0% { transform: scale(1); box-shadow: 0 6px 18px rgba(0,0,0,0.25); }
+  30% { transform: scale(1.28); box-shadow: 0 12px 28px rgba(0,0,0,0.35); }
+  60% { transform: scale(1.08); }
+  100% { transform: scale(1); box-shadow: 0 6px 18px rgba(0,0,0,0.25); }
+}
+.cart-widget__badge--pulse {
+  animation: cartBadgePulse 520ms cubic-bezier(.2,.9,.2,1);
+}
+
+/* Ajustes responsive */
+@media (max-width: 768px) {
+  .site-header .cart-widget { right: 0.6rem; }
+  .cart-widget__link { padding: 0.22rem 0.35rem; }
+  .cart-widget__badge { min-width: 20px; height: 20px; line-height: 20px; font-size: 0.75rem; }
+}
+
