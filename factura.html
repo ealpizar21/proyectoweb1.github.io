@@ -6,9 +6,20 @@
     <title>Factura | Bit By Bit</title>
     <link rel="stylesheet" href="estilo.css" />
     <style>
+      /* Estilos específicos de la factura (ligeros) */
       #resumenFactura table { width:100%; border-collapse: collapse; margin-bottom: 1rem; }
-      #resumenFactura th, #resumenFactura td { padding:0.6rem; border:2px solid rgba(255,255,255,0.04); text-align:left; }
+      #resumenFactura th, #resumenFactura td { padding:0.6rem; border:2px solid rgba(255,255,255,0.04); text-align:left; font-family: var(--font-base); }
       #resumenFactura h3 { margin-top: 0.6rem; }
+      .factura-meta { display:flex; gap:1rem; flex-wrap:wrap; justify-content: space-between; margin-bottom:1rem; }
+      .factura-meta .left, .factura-meta .right { min-width:200px; }
+      .factura-box { background: var(--purple); border: 2px solid var(--purple-light-border); padding: 0.75rem; border-radius: 8px; }
+      .factura-actions { display:flex; gap:0.6rem; margin-top:0.6rem; }
+      .btn-print { background:#39ff14; color:var(--purple-dark); border:none; padding:0.5rem 0.9rem; border-radius:6px; cursor:pointer; font-family:var(--font-base); }
+      .btn-clear { background:transparent; color:var(--text-light); border:1px solid rgba(255,255,255,0.08); padding:0.45rem 0.8rem; border-radius:6px; cursor:pointer; font-family:var(--font-base); }
+      .empty-note { text-align:center; padding:1rem; color:#ddd; }
+      @media (max-width:720px) {
+        .factura-meta { flex-direction:column; }
+      }
     </style>
   </head>
   <body>
@@ -21,26 +32,285 @@
         <a href="index.html" class="logo" aria-label="Ir al inicio">
           <img src="img/Logo_2.png" alt="Bit By Bit logo" />
         </a>
+        <!-- Cart widget (opcional visual) -->
+        <div id="cartWidget" class="cart-widget" aria-live="polite" style="position:absolute; right:1rem;">
+          <a href="carrito.html" class="cart-widget__link" aria-label="Ver carrito de compras">
+            <svg class="cart-widget__icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+              <path fill="currentColor" d="M7 4h-2l-1 2H2v2h1l3.6 7.59-1.35 2.44A1 1 0 0 0 5.99 19H19v-2H6.42c.03 0 .06-.01.09-.03l1.1-1.98H18a1 1 0 0 0 .92-.62l3-7A1 1 0 0 0 21 6H6.21l-.94-2zM7 20a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
+            </svg>
+            <span id="cartCount" class="cart-widget__badge">0</span>
+          </a>
+        </div>
       </div>
     </header>
 
     <main class="container">
       <section class="productos-destacados">
         <h2>Factura de Compra</h2>
-        <div id="resumenFactura" aria-live="polite"></div>
+
+        <div id="resumenFactura" aria-live="polite" class="factura-box">
+          <!-- Aquí se inyectará el resumen -->
+        </div>
+
+        <div class="factura-actions">
+          <button id="btnImprimir" class="btn-print" type="button">Imprimir / Guardar PDF</button>
+          <button id="btnVolver" class="btn-VM" type="button">Volver a la tienda</button>
+          <button id="btnLimpiar" class="btn-clear" type="button">Finalizar y borrar carrito</button>
+        </div>
+
         <div style="margin-top:1rem;">
           <a href="index.html" class="btn-VM">Volver al inicio</a>
         </div>
       </section>
     </main>
 
-    <!-- Footer -->
-    <footer class="site-footer">
-      <div class="container footer-content">
-        <span>Bit By Bit</span>
-      </div>
-    </footer>
+  
+   <footer class="site-footer">
+    <div class="container footer-content">
+      <a href="https://www.instagram.com" aria-label="Instagram">
+        <img src="img/Instagram.png" alt="Instagram" />
+      </a>
+      <span>Bit By Bit</span>
+      <a href="https://www.facebook.com/?locale=es_LA" aria-label="Facebook">
+        <img src="img/Facebook.png" alt="Facebook" />
+      </a>
+      <span>Bit By Bit</span>
+    </div>
+  </footer>
 
-    <script src="script.js"></script>
+    <!-- Script para generar la factura -->
+    <script>
+      (function () {
+        const LS_CART_KEY = 'carrito_demo';
+        const LS_ENVIO_KEY = 'metodoEnvio';
+        const LS_PAGO_KEY = 'metodoPago'; // opcional
+        const LS_PAGO_INFO = 'pago_info'; // opcional objeto con más detalles
+        const ENVIO_COST = 3500;
+
+        function readCartFallback() {
+          try {
+            const raw = localStorage.getItem(LS_CART_KEY) || '[]';
+            const parsed = JSON.parse(raw);
+            if (!Array.isArray(parsed)) return [];
+            return parsed;
+          } catch (err) {
+            console.error('Error leyendo carrito desde localStorage:', err);
+            return [];
+          }
+        }
+
+        function readCart() {
+          if (window._cartAPI && typeof window._cartAPI.readCart === 'function') {
+            try {
+              return window._cartAPI.readCart();
+            } catch (err) {
+              return readCartFallback();
+            }
+          }
+          return readCartFallback();
+        }
+
+        function formatMoney(n) {
+          return '₡' + Number(n).toLocaleString('es-CR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function calcularTotales(cart, metodoEnvio) {
+          let subtotal = 0;
+          for (const it of cart) {
+            subtotal += (Number(it.precio) || 0) * (Number(it.cantidad) || 0);
+          }
+          const envio = metodoEnvio === 'postal' ? ENVIO_COST : 0;
+          const total = subtotal + envio;
+          return { subtotal, envio, total };
+        }
+
+        function maskCard(cardNumber) {
+          if (!cardNumber) return null;
+          const s = String(cardNumber).replace(/\s+/g,'');
+          if (s.length < 4) return '****';
+          return '**** **** **** ' + s.slice(-4);
+        }
+
+        function renderEmpty(container) {
+          container.innerHTML = `<div class="empty-note">No hay productos en el carrito. <br>Agrega artículos antes de generar la factura.</div>`;
+          // actualizar badge si existe
+          const badge = document.getElementById('cartCount');
+          if (badge) badge.textContent = '0';
+        }
+
+        function renderFactura() {
+          const container = document.getElementById('resumenFactura');
+          if (!container) return;
+          const cart = readCart() || [];
+          if (!cart.length) {
+            renderEmpty(container);
+            return;
+          }
+
+          const metodoEnvio = localStorage.getItem(LS_ENVIO_KEY) || 'tienda';
+          const pagoMetodo = localStorage.getItem(LS_PAGO_KEY) || null;
+          let pagoInfo = null;
+          try {
+            pagoInfo = JSON.parse(localStorage.getItem(LS_PAGO_INFO) || 'null');
+          } catch (e) {
+            pagoInfo = null;
+          }
+
+          const { subtotal, envio, total } = calcularTotales(cart, metodoEnvio);
+
+          // Cabecera factura: número y fecha
+          const now = new Date();
+          const fechaStr = now.toLocaleString('es-CR', { dateStyle: 'medium', timeStyle: 'short' });
+          const numero = `FAC-${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}-${String(now.getTime()).slice(-6)}`;
+
+          // Tabla de productos
+          const filas = cart.map(it => {
+            const precio = Number(it.precio) || 0;
+            const cantidad = Number(it.cantidad) || 0;
+            const sub = precio * cantidad;
+            return `
+              <tr>
+                <td>${escapeHtml(String(it.nombre || 'Producto'))}</td>
+                <td>${formatMoney(precio)}</td>
+                <td>${cantidad}</td>
+                <td>${formatMoney(sub)}</td>
+              </tr>
+            `;
+          }).join('');
+
+          // Info pago (simulación)
+          let pagoHtml = '';
+          if (pagoInfo && typeof pagoInfo === 'object') {
+            // ejemplo: { metodo: "Tarjeta", titular: "Juan", numero: "********", tipo: "Visa" }
+            const tarjeta = maskCard(pagoInfo.numero) || (pagoInfo.ultimo4 ? '**** **** **** ' + pagoInfo.ultimo4 : null);
+            pagoHtml = `
+              <div><strong>Método:</strong> ${escapeHtml(String(pagoInfo.metodo || pagoMetodo ))}</div>
+              ${pagoInfo.titular ? `<div><strong>Titular:</strong> ${escapeHtml(String(pagoInfo.titular))}</div>` : ''}
+              ${tarjeta ? `<div><strong>Tarjeta:</strong> ${escapeHtml(tarjeta)}</div>` : ''}
+            `;
+          } else if (pagoMetodo) {
+            pagoHtml = `<div><strong>Método:</strong> ${escapeHtml(pagoMetodo)}</div>`;
+          } else {
+            pagoHtml = `<div><strong>Método:</strong> (datos no disponibles)</div>`;
+          }
+
+          // Shipping human text
+          const envioTexto = metodoEnvio === 'postal' ? `Envío postal (${formatMoney(envio)})` : 'Recogida en tienda (₡0)';
+
+          container.innerHTML = `
+            <div class="factura-meta" aria-hidden="false">
+              <div class="left">
+                <div><strong>Nº Factura:</strong> ${escapeHtml(numero)}</div>
+                <div><strong>Fecha:</strong> ${escapeHtml(fechaStr)}</div>
+              </div>
+              <div class="right">
+                <div><strong>Cliente:</strong> Compra en línea </div>
+                <div><strong>Estado:</strong> Registrada</div>
+              </div>
+            </div>
+
+            <table role="table" aria-label="Detalle de productos">
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th>Precio unitario</th>
+                  <th>Cantidad</th>
+                  <th>Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${filas}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="3" style="text-align:right;"><strong>Subtotal:</strong></td>
+                  <td>${formatMoney(subtotal)}</td>
+                </tr>
+                <tr>
+                  <td colspan="3" style="text-align:right;"><strong>${escapeHtml(envioTexto)}:</strong></td>
+                  <td>${formatMoney(envio)}</td>
+                </tr>
+                <tr>
+                  <td colspan="3" style="text-align:right;"><strong>Total a pagar:</strong></td>
+                  <td><strong>${formatMoney(total)}</strong></td>
+                </tr>
+              </tfoot>
+            </table>
+
+            <div id="infoPago" style="margin-top:0.6rem;">
+              <h3>Medio de pago</h3>
+              <div class="factura-box">${pagoHtml}</div>
+            </div>
+
+           
+          `;
+
+          // Actualizar badge de carrito con cantidad total (para uniformidad)
+          const badge = document.getElementById('cartCount');
+          if (badge) {
+            const qty = cart.reduce((s,i)=> s + (Number(i.cantidad)||0), 0);
+            badge.textContent = qty;
+          }
+        }
+
+        // Helpers
+        function escapeHtml(str) {
+          return String(str || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+        }
+
+        // Botones: imprimir, volver, limpiar
+        document.addEventListener('DOMContentLoaded', () => {
+          renderFactura();
+
+          const btnImprimir = document.getElementById('btnImprimir');
+          const btnVolver = document.getElementById('btnVolver');
+          const btnLimpiar = document.getElementById('btnLimpiar');
+
+          if (btnImprimir) {
+            btnImprimir.addEventListener('click', () => {
+              window.print();
+            });
+          }
+          if (btnVolver) {
+            btnVolver.addEventListener('click', () => {
+              window.location.href = 'coleccionables.html';
+            });
+          }
+          if (btnLimpiar) {
+            btnLimpiar.addEventListener('click', () => {
+              const confirmar = confirm('¿Deseas finalizar y borrar el carrito?');
+              if (!confirmar) return;
+              // limpiar carrito y preferencias relacionadas
+              try {
+                if (window._cartAPI && typeof window._cartAPI.writeCart === 'function') {
+                  window._cartAPI.writeCart([]);
+                } else {
+                  localStorage.removeItem(LS_CART_KEY);
+                }
+                // opcional: quitar metodoEnvio y metodoPago
+                localStorage.removeItem(LS_ENVIO_KEY);
+                localStorage.removeItem(LS_PAGO_KEY);
+                localStorage.removeItem(LS_PAGO_INFO);
+              } catch (err) {
+                console.error('Error limpiando carrito:', err);
+              }
+              // re-render y badge
+              renderFactura();
+              if (window._cartAPI && typeof window._cartAPI.updateCartBadge === 'function') {
+                try { window._cartAPI.updateCartBadge(true); } catch (e) {}
+              } else {
+                const badge = document.getElementById('cartCount'); if (badge) badge.textContent = '0';
+              }
+              alert('Carrito borrado. Gracias por tu compra.');
+            });
+          }
+        });
+      })();
+    </script>
   </body>
 </html>

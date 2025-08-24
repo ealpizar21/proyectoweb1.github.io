@@ -63,6 +63,9 @@ if (document.getElementById("catalogo")) {
   cargarProductos()
     .then((productos) => validarYRepararImagenes(productos))
     .then((productos) => {
+      // guardar cache global para que addToCartById pueda usarla
+      window.__productosCache = productos;
+
       function render(categoria = "todos", termino = "") {
         catalogo.innerHTML = "";
         const lista = productos
@@ -75,6 +78,7 @@ if (document.getElementById("catalogo")) {
         lista.forEach((p) => {
           const wrapper = document.createElement("div");
           wrapper.className = "producto-card";
+          wrapper.setAttribute('data-id', p.id);
           wrapper.innerHTML = `
             <div class="card" tabindex="0">
               <div class="card-image">
@@ -87,6 +91,7 @@ if (document.getElementById("catalogo")) {
               </div>
               <div style="margin-top:8px;">
                 <a class="btn-Comprar" href="detalle_coleccionable.html?id=${p.id}">Ver detalle</a>
+                <button class="btn-VM btn-add-cart" data-id="${p.id}">Añadir al carrito</button>
               </div>
             </div>
           `;
@@ -234,6 +239,9 @@ if (document.getElementById("detalleProducto")) {
   cargarProductos()
     .then((productos) => validarYRepararImagenes(productos))
     .then((productos) => {
+      // cache global
+      window.__productosCache = productos;
+
       const producto = productos.find((p) => Number(p.id) === Number(id));
       if (!producto) {
         cont.innerHTML = `<p>Producto no encontrado.</p>`;
@@ -292,16 +300,26 @@ if (document.getElementById("detalleProducto")) {
       // renderizar reseñas iniciales (combinadas con guardadas) y botones eliminar
       renderResenasYHandlers(producto);
 
-      // carrito (simulación localStorage)
-      document.getElementById("agregarCarrito").addEventListener("click", () => {
-        const key = "carrito_demo";
-        const carrito = JSON.parse(localStorage.getItem(key) || "[]");
-        const existe = carrito.find((i) => i.id === producto.id);
-        if (existe) existe.cantidad++;
-        else carrito.push({ id: producto.id, nombre: producto.nombre, precio: producto.precio, cantidad: 1 });
-        localStorage.setItem(key, JSON.stringify(carrito));
-        alert("Producto agregado al carrito (simulado).");
-      });
+      // carrito (usar la función centralizada addToCartById si existe)
+      const btnAgregar = document.getElementById("agregarCarrito");
+      if (btnAgregar) {
+        btnAgregar.addEventListener("click", () => {
+          if (typeof window.addToCartById === "function") {
+            window.addToCartById(producto.id, 1, true);
+          } else {
+            // fallback: almacenamiento directo
+            const key = "carrito_demo";
+            const carrito = JSON.parse(localStorage.getItem(key) || "[]");
+            const existe = carrito.find((i) => i.id === producto.id);
+            if (existe) existe.cantidad++;
+            else carrito.push({ id: producto.id, nombre: producto.nombre, precio: producto.precio, cantidad: 1 });
+            localStorage.setItem(key, JSON.stringify(carrito));
+            alert("Producto agregado al carrito (simulado).");
+            window.dispatchEvent(new Event('cart:update'));
+            window.dispatchEvent(new Event('cart:triggerUpdate'));
+          }
+        });
+      }
 
       // submit del formulario de reseña: guarda en localStorage y re-renders
       const form = document.getElementById("formResena");
@@ -420,38 +438,345 @@ if (document.getElementById("detalleProducto")) {
   });
 })();
 
+/* ------------------ Carrito centralizado (pegar al final de script.js) ------------------ */
+(function () {
+  const LS_KEY = 'carrito_demo';
+  const ENVIO_COST = 3500;
 
- 
-      (function () {
-        const LS_KEY = 'carrito_demo';
-        const BADGE = document.getElementById('cartCount');
+  /* ----- util localStorage ----- */
+  function readCart() {
+    try {
+      const raw = localStorage.getItem(LS_KEY);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return [];
+      return parsed.map(it => ({
+        id: it.id ?? null,
+        nombre: it.nombre ?? 'Producto',
+        precio: Number(it.precio) || 0,
+        cantidad: Math.max(0, Number(it.cantidad) || 0)
+      }));
+    } catch (err) {
+      console.error('Error parseando carrito desde localStorage:', err, localStorage.getItem(LS_KEY));
+      return [];
+    }
+  }
+  function writeCart(cart) {
+    try {
+      localStorage.setItem(LS_KEY, JSON.stringify(cart));
+      // eventos para que badge y otras pestañas se actualicen
+      window.dispatchEvent(new Event('cart:update'));
+      window.dispatchEvent(new Event('cart:triggerUpdate'));
+    } catch (err) {
+      console.error('Error guardando carrito:', err);
+    }
+  }
 
-        function getCartQty() {
-          try {
-            const cart = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
-            return cart.reduce((s, i) => s + (Number(i.cantidad) || 0), 0);
-          } catch (e) {
-            return 0;
-          }
+  /* ----- Badge (header) ----- */
+  function getBadgeEl() {
+    return document.getElementById('cartCount') || document.querySelector('.cart-widget__badge') || document.querySelector('.cart-bubble');
+  }
+
+  function updateCartBadge(animate = false) {
+    const badge = getBadgeEl();
+    if (!badge) return;
+    const cart = readCart();
+    const qty = cart.reduce((s, i) => s + (Number(i.cantidad) || 0), 0);
+    badge.textContent = qty;
+    if (animate) {
+      badge.classList.remove('cart-widget__badge--pulse', 'cart-badge--pulse');
+      void badge.offsetWidth;
+      badge.classList.add('cart-widget__badge--pulse', 'cart-badge--pulse');
+    }
+  }
+
+  // Inicializar badge al cargar
+  document.addEventListener('DOMContentLoaded', () => updateCartBadge(false));
+  // actualizar si otra pestaña cambia localStorage
+  window.addEventListener('storage', (e) => { if (e.key === LS_KEY) updateCartBadge(false); });
+  // actualizar por eventos custom
+  window.addEventListener('cart:triggerUpdate', () => updateCartBadge(true));
+  window.addEventListener('cart:update', () => updateCartBadge(false));
+
+  /* ----- Añadir al carrito (global) ----- */
+  /* ======= Opción 1: addToCartById con lock anti-duplicado y toast fallback ======= */
+  async function addToCartById(id, cantidad = 1, showModal = true) {
+    // bloqueo anti-duplicado (600 ms)
+    if (window.__addingToCartLock && Date.now() - window.__addingToCartLock < 600) return;
+    window.__addingToCartLock = Date.now();
+
+    // intenta buscar datos del producto en cache window.__productosCache (si existe)
+    let producto = null;
+    if (window.__productosCache && Array.isArray(window.__productosCache)) {
+      producto = window.__productosCache.find(p => String(p.id) === String(id));
+    }
+    // si no hay producto en cache, intenta obtener info mínima desde el DOM
+    if (!producto) {
+      const card = document.querySelector(`.btn-add-cart[data-id="${id}"]`)?.closest('.producto-card') ||
+                   document.querySelector(`a[href*="detalle_coleccionable.html?id=${id}"]`)?.closest('.producto-card') ||
+                   document.querySelector('.detalle');
+      if (card) {
+        const nombre = card.querySelector('h3')?.textContent?.trim() || `Producto ${id}`;
+        const precioText = card.querySelector('.precio')?.textContent || '0';
+        const precio = parseFloat(precioText.replace(/[^0-9.,]/g,'').replace(',','.') || 0) || 0;
+        const img = card.querySelector('img')?.getAttribute('src') || 'img/placeholder.png';
+        producto = { id, nombre, precio, imagenes: [img] };
+      }
+    }
+    if (!producto) producto = { id, nombre: `Producto ${id}`, precio: 0, imagenes: ['img/placeholder.png'] };
+
+    // leer y actualizar carrito
+    const cart = readCart();
+    const existente = cart.find(i => String(i.id) === String(producto.id));
+    if (existente) existente.cantidad = Number(existente.cantidad || 0) + Number(cantidad);
+    else cart.push({ id: producto.id, nombre: producto.nombre, precio: Number(producto.precio) || 0, cantidad: Number(cantidad) });
+
+    writeCart(cart);
+    updateCartBadge(true);
+
+    // mostrar modal si existe; si no, mostrar toast/alert como fallback
+    if (showModal) {
+      const modal = document.getElementById('addCartModal');
+      const modalImg = document.getElementById('modalProdImg');
+      const modalName = document.getElementById('modalProdName');
+      const modalContinue = document.getElementById('modalContinue');
+
+      if (modal && modalImg && modalName) {
+        modalImg.src = (producto.imagenes && producto.imagenes[0]) ? producto.imagenes[0] : 'img/placeholder.png';
+        modalImg.alt = producto.nombre || 'Producto';
+        modalName.textContent = producto.nombre || 'Producto añadido';
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+        setTimeout(()=> modalContinue && modalContinue.focus(), 80);
+      } else {
+        // fallback: toast (crea uno si no existe)
+        let toast = document.getElementById('cartAddedToast');
+        if (!toast) {
+          toast = document.createElement('div');
+          toast.id = 'cartAddedToast';
+          toast.style.position = 'fixed';
+          toast.style.right = '1rem';
+          toast.style.bottom = '1rem';
+          toast.style.background = 'rgba(0,0,0,0.8)';
+          toast.style.color = '#fff';
+          toast.style.padding = '0.6rem 0.9rem';
+          toast.style.borderRadius = '8px';
+          toast.style.fontFamily = 'var(--font-base)';
+          toast.style.zIndex = 99999;
+          toast.style.boxShadow = '0 8px 20px rgba(0,0,0,0.5)';
+          document.body.appendChild(toast);
         }
+        toast.textContent = `${producto.nombre} agregado al carrito`;
+        toast.style.opacity = '1';
+        if (toast._timeoutId) clearTimeout(toast._timeoutId);
+        toast._timeoutId = setTimeout(() => {
+          toast.style.transition = 'opacity 300ms';
+          toast.style.opacity = '0';
+          setTimeout(()=> toast.remove(), 350);
+        }, 1800);
+      }
+    }
+  }
 
-        function updateBadge(animate = false) {
-          if (!BADGE) return;
-          const qty = getCartQty();
-          BADGE.textContent = qty;
-          if (animate) {
-            BADGE.classList.remove('cart-widget__badge--pulse');
-            void BADGE.offsetWidth;
-            BADGE.classList.add('cart-widget__badge--pulse');
-          }
+  // Exponer globalmente
+  window.addToCartById = addToCartById;
+  window.updateCartBadge = updateCartBadge;
+
+  /* ----- Delegación: botones .btn-add-cart (catálogo) ----- */
+  document.addEventListener('click', (e) => {
+    const addBtn = e.target.closest('.btn-add-cart');
+    if (!addBtn) return;
+    const id = addBtn.getAttribute('data-id');
+    if (!id) return;
+    addToCartById(id, 1, true).catch(err => console.error(err));
+  });
+
+  /* ----- Delegación extra: botón #agregarCarrito (detalle) ----- */
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('#agregarCarrito');
+    if (!a) return;
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id') || a.getAttribute('data-id');
+    if (!id) {
+      const card = document.querySelector('.producto-card') || document.querySelector('.detalle');
+      const derivedId = card ? card.getAttribute('data-id') : null;
+      if (derivedId) {
+        addToCartById(derivedId, 1, true).catch(err => console.error(err));
+      } else {
+        console.warn('No se pudo inferir el id del producto para agregar al carrito.');
+      }
+    } else {
+      addToCartById(id, 1, true).catch(err => console.error(err));
+    }
+  });
+
+  /* ----- Renderizador para carrito.html (si existe #tablaCarrito) ----- */
+  function formatMoney(n) {
+    return '₡' + Number(n).toLocaleString('es-CR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  }
+  function calcularTotales(cart) {
+    let subtotal = 0;
+    cart.forEach(it => subtotal += (Number(it.precio)||0) * (Number(it.cantidad)||0));
+    const envioTipo = (document.querySelector("input[name='envio']:checked") || {}).value || 'tienda';
+    const envio = envioTipo === 'postal' ? ENVIO_COST : 0;
+    const total = subtotal + envio;
+    return { subtotal, envio, total, envioTipo };
+  }
+
+  function renderCarritoPage() {
+    const tabla = document.getElementById('tablaCarrito');
+    if (!tabla) return;
+    const tbody = tabla.querySelector('tbody');
+    const totalEl = document.getElementById('total');
+    const cart = readCart();
+    tbody.innerHTML = '';
+    if (!cart.length) {
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:1rem;">No hay productos en el carrito.</td></tr>`;
+      if (totalEl) totalEl.textContent = `Total: ${formatMoney(0)}`;
+      return;
+    }
+    cart.forEach((item, idx) => {
+      const subtotal = (Number(item.precio)||0) * (Number(item.cantidad)||0);
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${escapeHtml(item.nombre)}</td>
+        <td>${formatMoney(item.precio)}</td>
+        <td><input type="number" min="0" value="${Number(item.cantidad)}" data-idx="${idx}" class="cart-qty" /></td>
+        <td class="cell-subtotal">${formatMoney(subtotal)}</td>
+        <td><button class="btnEliminar" data-idx="${idx}">Eliminar</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+    const { subtotal, envio, total } = calcularTotales(cart);
+    if (totalEl) {
+      const textoEnvio = envio > 0 ? ` (incluye envío ${formatMoney(envio)})` : ' (recogida en tienda)';
+      totalEl.textContent = `Total: ${formatMoney(total)}${textoEnvio}`;
+    }
+  }
+
+  // Delegación en tabla: cambio de cantidad y eliminar
+  document.addEventListener('input', (e) => {
+    if (!e.target.classList.contains('cart-qty')) return;
+    const idx = Number(e.target.getAttribute('data-idx'));
+    let cart = readCart();
+    let nueva = parseInt(e.target.value, 10);
+    if (isNaN(nueva)) nueva = 0;
+    if (nueva <= 0) {
+      // eliminar
+      cart.splice(idx, 1);
+    } else {
+      if (cart[idx]) cart[idx].cantidad = nueva;
+    }
+    writeCart(cart);
+    renderCarritoPage();
+    updateCartBadge(true);
+  });
+
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.btnEliminar');
+    if (!btn) return;
+    const idx = Number(btn.getAttribute('data-idx'));
+    let cart = readCart();
+    if (idx >= 0 && idx < cart.length) {
+      cart.splice(idx, 1);
+      writeCart(cart);
+      renderCarritoPage();
+      updateCartBadge(true);
+    }
+  });
+
+  // envío: recalcular al cambiar radio (si está la sección)
+  document.addEventListener('change', (e) => {
+    if (e.target && e.target.name === 'envio') {
+      // guardar preferencia opcional
+      localStorage.setItem('metodoEnvio', (document.querySelector("input[name='envio']:checked")||{}).value || 'tienda');
+      renderCarritoPage();
+      updateCartBadge(false);
+    }
+  });
+
+  // iniciar render si estamos en la página carrito
+  document.addEventListener('DOMContentLoaded', () => {
+    renderCarritoPage();
+  });
+
+  // Exponer para debugging
+  window._cartAPI = { readCart, writeCart, addToCartById, renderCarritoPage, updateCartBadge };
+})();
+
+/* ------------------ Setup global del modal de carrito ------------------ */
+(function initGlobalCartModalHandlers() {
+  // Evitar creación múltiple
+  if (window.__cartModalHandlersInitialized) return;
+  window.__cartModalHandlersInitialized = true;
+
+  function qs(sel) { return document.querySelector(sel); }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const modal = qs('#addCartModal');
+    if (!modal) return;
+
+    const backdrop = modal.querySelector('.modal-confirm__backdrop') || modal;
+    const closeBtn = qs('#modalClose');
+    const continueBtn = qs('#modalContinue');
+    const card = modal.querySelector('.modal-confirm__card') || modal.querySelector('.modal-confirm__content');
+
+    // Funciones abrir / cerrar (reutilizables)
+    function openModalFocus() {
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+      // foco en botón continuar para accesibilidad
+      if (continueBtn) continueBtn.focus();
+    }
+    function closeModal() {
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+
+    // Si alguien (por ejemplo addToCartById) modifica modal.classList, esto se resume
+    // Añadimos listeners seguros y sin duplicados
+    if (closeBtn) {
+      closeBtn.addEventListener('click', (e) => { e.preventDefault(); closeModal(); });
+      closeBtn.setAttribute('type', 'button');
+    }
+    if (continueBtn) {
+      continueBtn.addEventListener('click', (e) => { e.preventDefault(); closeModal(); });
+      continueBtn.setAttribute('type', 'button');
+    }
+
+    // Clic en backdrop para cerrar (solo si clic fue en backdrop)
+    if (backdrop) {
+      backdrop.addEventListener('click', (e) => {
+        // si backdrop es el propio modal, permitir cerrar solo cuando clic fuera del card
+        if (backdrop === modal) {
+          if (!card || !card.contains(e.target)) closeModal();
+        } else {
+          if (e.target === backdrop) closeModal();
         }
+      });
+    }
 
-        // Inicial
-        document.addEventListener('DOMContentLoaded', () => updateBadge(false));
+    // Evitar que clics dentro de la tarjeta cierren el modal por bubbling
+    if (card) {
+      card.addEventListener('click', (e) => e.stopPropagation());
+    }
 
-        // Escuchar cambios en storage (otras pestañas) y evento custom
-        window.addEventListener('storage', (e) => { if (e.key === LS_KEY) updateBadge(false); });
-        window.addEventListener('cart:triggerUpdate', () => updateBadge(true));
-        window.addEventListener('cart:update', () => updateBadge(false));
-      })();
-/* ================= End of script.js ================= */
+    // Cerrar con tecla Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('open')) {
+        closeModal();
+      }
+    });
+
+    // Exponer pequeñas utilidades para debugging
+    window._cartModal = { open: openModalFocus, close: closeModal, el: modal };
+
+    // Si el modal ya fue abierto antes de DOMContentLoaded, forzamos foco
+    if (modal.classList.contains('open')) {
+      setTimeout(() => { if (continueBtn) continueBtn.focus(); }, 80);
+    }
+  });
+})();
+
+
+/* ---------------- Fin del código del carrito ---------------- */

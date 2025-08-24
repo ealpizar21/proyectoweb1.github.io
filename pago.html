@@ -1,73 +1,417 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Pago | Bit By Bit</title>
-    <link rel="stylesheet" href="estilo.css" />
-    <style>
-      .payment-form { max-width: 520px; margin: 1rem auto; display:flex; flex-direction:column; gap:0.6rem; }
-      .payment-form label { font-size:0.85rem; }
-      .payment-form input, .payment-form select {
-        padding:0.6rem; border-radius:6px; border:1px solid #ccc; font-family:var(--font-base);
-      }
-      .mensaje-error { color: #ffb3b3; background: rgba(255,0,0,0.06); padding:0.6rem; border-radius:6px; margin-top:0.6rem; display:none; }
-      .mensaje-error.show { display:block; }
-      @media (max-width:600px) { .payment-form { padding: 0 1rem; } }
-    </style>
-  </head>
-  <body>
-    <!-- Header -->
-    <header class="site-header">
-      <div class="container header-content">
-        <input type="checkbox" id="menu-toggle" class="menu-toggle" />
-        <label for="menu-toggle" class="menu-icon" aria-hidden="true">&#9776;</label>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pago | Bit By Bit</title>
+  <link rel="stylesheet" href="estilo.css" />
+  <style>
+    /* Estilos locales para el formulario */
+    .checkout {
+      max-width: 900px;
+      margin: 1.5rem auto;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 1rem;
+    }
+    @media (max-width:920px){ .checkout { grid-template-columns: 1fr; } }
 
-        <a href="index.html" class="logo" aria-label="Ir al inicio">
-          <img src="img/Logo_2.png" alt="Bit By Bit logo" />
-        </a>
+    .card-box {
+      background: var(--purple);
+      border: 2px solid var(--purple-light-border);
+      padding: 1rem;
+      border-radius: 8px;
+    }
 
-        <nav class="responsive-nav" aria-label="Menú principal">
-          <ul>
-            <li><a href="index.html">Inicio</a></li>
-            <li><a href="coleccionables.html">Coleccionables</a></li>
-            <li><a href="carrito.html">Carrito</a></li>
-          </ul>
-        </nav>
-      </div>
-    </header>
+    label { display:block; font-size:0.75rem; margin-bottom:0.35rem; }
+    input[type="text"], input[type="tel"], input[type="month"], select {
+      width:100%;
+      padding:0.6rem;
+      border-radius:6px;
+      border:1px solid #ccc;
+      font-family: var(--font-base);
+      font-size:0.8rem;
+    }
+    .campo { margin-bottom:0.8rem; }
+    .campo-inline { display:flex; gap:0.6rem; }
+    .campo-inline .campo { flex:1; }
+    .error { color:#ffb3b3; font-size:0.75rem; margin-top:0.25rem; display:none; }
+    .error.visible { display:block; }
+    .small { font-size:0.78rem; color:#dfe7ff; }
 
-    <main class="container">
-      <section class="productos-destacados">
-        <h2>Datos de Pago</h2>
+    .actions { display:flex; gap:0.6rem; margin-top:0.6rem; align-items:center; }
+    .btn-submit { background:#39ff14; color:var(--purple-dark); border:none; padding:0.6rem 1rem; border-radius:6px; cursor:pointer; font-family:var(--font-base); font-weight:700; }
+    .btn-cancel { background:transparent; color:var(--text-light); border:1px solid rgba(255,255,255,0.06); padding:0.5rem 0.9rem; border-radius:6px; }
 
-        <form id="formPago" class="payment-form" novalidate>
-          <label for="tarjeta">Número de tarjeta</label>
-          <input type="text" id="tarjeta" maxlength="16" inputmode="numeric" pattern="\d{16}" placeholder="1234567812345678" required />
+    /* resumen lateral */
+    .resumen {
+      display:flex;
+      flex-direction:column;
+      gap:0.6rem;
+    }
+    .resumen table { width:100%; border-collapse:collapse; }
+    .resumen th,.resumen td { padding:0.5rem; border-bottom:1px dashed rgba(255,255,255,0.04); font-size:0.85rem; text-align:left; }
+    .total-line { display:flex; justify-content:space-between; gap:1rem; font-weight:700; padding:0.6rem 0; border-top:2px solid rgba(255,255,255,0.03); }
 
-          <label for="caducidad">Fecha de caducidad (MM/AA o MM/AAAA)</label>
-          <input type="text" id="caducidad" placeholder="MM/AA o MM/AAAA" required />
+    .mensaje-ok { background: rgba(57,255,20,0.12); border:1px solid rgba(57,255,20,0.12); padding:0.6rem; border-radius:6px; color:var(--text-light); display:none; }
+    .mensaje-ok.show { display:block; }
 
-          <label for="cvv">CVV</label>
-          <input type="text" id="cvv" maxlength="4" inputmode="numeric" placeholder="123" required />
+    .hint { font-size:0.75rem; color:#cfd8ff; margin-bottom:0.6rem; }
 
-          <label for="titular">Nombre del titular</label>
-          <input type="text" id="titular" maxlength="60" placeholder="Juan Pérez" required />
+    /* focus accesible */
+    input:focus { outline: 3px solid rgba(57,255,20,0.12); outline-offset: 3px; }
 
-          <button class="btn-Comprar" type="submit">Finalizar Compra</button>
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-content">
+      <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+      <label for="menu-toggle" class="menu-icon" aria-hidden="true">&#9776;</label>
+
+      <a href="index.html" class="logo" aria-label="Ir al inicio">
+        <img src="img/Logo_2.png" alt="Bit By Bit logo" />
+      </a>
+    </div>
+  </header>
+
+  <main class="container">
+    <h2 style="text-align:center; margin-top:1.25rem;">Pago — Tarjeta</h2>
+
+    <div class="checkout">
+      <!-- Formulario de pago -->
+      <div class="card-box" aria-labelledby="tituloPago">
+        <h3 id="tituloPago">Detalles de pago</h3>
+        <p class="hint">Introduce los datos de la tarjeta.</p>
+
+        <form id="formPago" novalidate>
+          <!-- Número tarjeta -->
+          <div class="campo">
+            <label for="numeroTarjeta">Número de tarjeta (16 dígitos, sin espacios)</label>
+            <input id="numeroTarjeta" name="numeroTarjeta" type="tel" inputmode="numeric" autocomplete="cc-number" placeholder="1234123412341234" maxlength="16" pattern="\d{16}" required />
+            <div id="errNumero" class="error">El número debe tener exactamente 16 dígitos numéricos.</div>
+          </div>
+
+          <!-- Fecha + CVV -->
+          <div class="campo-inline">
+            <div class="campo">
+              <label for="fechaExp">Fecha de caducidad (MM/AA o MM/AAAA)</label>
+              <!-- inputmode y maxlength para mejorar UX móvil; maxlength 7 permite "MM/AAAA" -->
+              <input id="fechaExp" name="fechaExp" type="text" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/AA o MM/AAAA" maxlength="7" required />
+              <div id="errFecha" class="error">Formato inválido o tarjeta vencida. Usa MM/AA o MM/AAAA.</div>
+            </div>
+
+            <div class="campo">
+              <label for="cvv">CVV (3 o 4 dígitos)</label>
+              <input id="cvv" name="cvv" type="tel" inputmode="numeric" placeholder="123" maxlength="4" required />
+              <div id="errCvv" class="error">CVV inválido. Debe ser 3 o 4 dígitos numéricos.</div>
+            </div>
+          </div>
+
+          <!-- Titular -->
+          <div class="campo">
+            <label for="titular">Nombre del titular (tal como aparece en la tarjeta)</label>
+            <input id="titular" name="titular" type="text" autocomplete="cc-name" placeholder="Juan Pérez" required />
+            <div id="errTitular" class="error">Nombre inválido. Solo letras, espacios, apóstrofes o guiones (2–60 caracteres).</div>
+          </div>
+
+          <!-- Resumen y acciones -->
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:0.6rem; margin-top:0.6rem;">
+            <div class="small"></div>
+            <div>
+              <button type="submit" class="btn-submit">Pagar ahora</button>
+              <button type="button" id="btnCancelar" class="btn-cancel">Cancelar</button>
+            </div>
+          </div>
+
+          <div id="mensajeExito" class="mensaje-ok" role="status" aria-live="polite" style="margin-top:0.8rem;">
+            Pago registrado correctamente — redirigiendo a la factura...
+          </div>
         </form>
-
-        <div id="mensajeError" class="mensaje-error" aria-live="polite"></div>
-      </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="site-footer">
-      <div class="container footer-content">
-        <span>Bit By Bit</span>
       </div>
-    </footer>
 
-    <script src="script.js"></script>
-  </body>
+      <!-- Resumen pedido lateral -->
+      <aside class="card-box resumen" aria-labelledby="tituloResumen">
+        <h3 id="tituloResumen">Resumen del pedido</h3>
+        <div id="resumenTablaWrap" style="overflow:auto;">
+          <table id="resumenTabla" aria-live="polite">
+            <thead><tr><th>Producto</th><th style="width:70px">Cant.</th><th style="width:110px">Subtotal</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div class="small" id="envioInfo">Envío: recógelo en tienda (₡0) — puedes cambiarlo en el carrito.</div>
+
+        <div class="total-line">
+          <div>Subtotal</div><div id="subTotalTxt">₡0.00</div>
+        </div>
+        <div class="total-line">
+          <div>Envío</div><div id="envioTxt">₡0.00</div>
+        </div>
+        <div class="total-line" style="font-size:1.05rem;">
+          <div>Total</div><div id="totalTxt">₡0.00</div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+<footer class="site-footer">
+    <div class="container footer-content">
+      <a href="https://www.instagram.com" aria-label="Instagram">
+        <img src="img/Instagram.png" alt="Instagram" />
+      </a>
+      <span>Bit By Bit</span>
+      <a href="https://www.facebook.com/?locale=es_LA" aria-label="Facebook">
+        <img src="img/Facebook.png" alt="Facebook" />
+      </a>
+      <span>Bit By Bit</span>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      const LS_CART_KEY = 'carrito_demo';
+      const LS_ENVIO_KEY = 'metodoEnvio'; // 'postal' or 'tienda'
+      const LS_PAGO_KEY = 'metodoPago';
+      const LS_PAGO_INFO = 'pago_info';
+      const ENVIO_COST = 3500;
+
+      // Helpers
+      function q(id){return document.getElementById(id);}
+      function formatMoney(n) { return '₡' + Number(n).toLocaleString('es-CR',{minimumFractionDigits:2, maximumFractionDigits:2}); }
+      function readCart() {
+        try {
+          const raw = localStorage.getItem(LS_CART_KEY) || '[]';
+          const arr = JSON.parse(raw);
+          return Array.isArray(arr) ? arr : [];
+        } catch (e) { return []; }
+      }
+
+      /* ---------- Autoformateo del campo Fecha de caducidad ---------- */
+      (function initExpiryAutoformat() {
+        const fechaEl = q('fechaExp');
+        if (!fechaEl) return;
+
+        function formatExpiryValue(raw) {
+          let digits = String(raw || '').replace(/\D/g, '');
+          if (digits.length === 0) return '';
+
+          if (digits.length > 6) digits = digits.slice(0, 6);
+
+          if (digits.length === 1) {
+            if (parseInt(digits, 10) > 1) {
+              return '0' + digits;
+            }
+            return digits;
+          }
+
+          let mm = digits.slice(0, 2);
+          const mmNum = parseInt(mm, 10);
+          if (!Number.isNaN(mmNum)) {
+            if (mmNum === 0) mm = '01';
+            else if (mmNum > 12) mm = '12';
+            else mm = String(mmNum).padStart(2, '0');
+          }
+
+          const rest = digits.slice(2);
+          if (rest.length === 0) return mm;
+          if (rest.length <= 2) {
+            return mm + '/' + rest;
+          }
+          return mm + '/' + rest;
+        }
+
+        function applyFormatted() {
+          const formatted = formatExpiryValue(fechaEl.value);
+          fechaEl.value = formatted;
+          try { fechaEl.setSelectionRange(fechaEl.value.length, fechaEl.value.length); } catch (e) {}
+        }
+
+        fechaEl.addEventListener('keydown', (ev) => {
+          const allowed = ['Backspace','Tab','ArrowLeft','ArrowRight','Delete','Home','End'];
+          if (allowed.includes(ev.key)) return;
+          if (ev.ctrlKey || ev.metaKey) return;
+          if (!/^\d$/.test(ev.key)) {
+            ev.preventDefault();
+          }
+        });
+
+        fechaEl.addEventListener('input', (ev) => {
+          applyFormatted();
+        });
+
+        fechaEl.addEventListener('paste', (ev) => {
+          ev.preventDefault();
+          const txt = (ev.clipboardData || window.clipboardData).getData('text') || '';
+          const digits = txt.replace(/\D/g, '').slice(0,6);
+          fechaEl.value = formatExpiryValue(digits);
+          fechaEl.dispatchEvent(new Event('input', { bubbles: true }));
+        });
+
+        fechaEl.addEventListener('blur', () => {
+          let v = fechaEl.value.replace(/\D/g,'');
+          if (v.length === 1) {
+            fechaEl.value = formatExpiryValue(v);
+          }
+        });
+      })();
+
+      // Validadores
+      function validarNumeroTarjeta(v) {
+        if (!/^\d{16}$/.test(v)) return false;
+        return true;
+      }
+
+      function validarFechaExp(v) {
+        if (!v || typeof v !== 'string') return false;
+        v = v.trim();
+        const m = v.match(/^(\d{1,2})\/(\d{2}|\d{4})$/);
+        if (!m) return false;
+        const mm = Number(m[1]);
+        let yy = m[2];
+        if (mm < 1 || mm > 12) return false;
+        let yyyy = Number(yy);
+        if (yy.length === 2) {
+          yyyy = 2000 + yyyy;
+        }
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const currentMonth = now.getMonth() + 1;
+        if (yyyy < currentYear) return false;
+        if (yyyy === currentYear && mm < currentMonth) return false;
+        return true;
+      }
+
+      function validarCvv(v) {
+        return /^\d{3}$/.test(v) || /^\d{4}$/.test(v);
+      }
+
+      function validarTitular(v) {
+        if (!v) return false;
+        v = v.trim();
+        if (v.length < 2 || v.length > 60) return false;
+        return /^[\p{L}'’\-\s]+$/u.test(v);
+      }
+
+      // Render resumen lateral
+      function renderResumen() {
+        const cart = readCart();
+        const tbody = document.querySelector('#resumenTabla tbody');
+        tbody.innerHTML = '';
+        if (!cart.length) {
+          tbody.innerHTML = '<tr><td colspan="3">No hay productos en el carrito.</td></tr>';
+          q('subTotalTxt').textContent = formatMoney(0);
+          q('envioTxt').textContent = formatMoney(0);
+          q('totalTxt').textContent = formatMoney(0);
+          return;
+        }
+        let subtotal = 0;
+        cart.forEach(it => {
+          const precio = Number(it.precio) || 0;
+          const cantidad = Number(it.cantidad) || 0;
+          const sub = precio * cantidad;
+          subtotal += sub;
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${escapeHtml(String(it.nombre || 'Producto'))}</td><td>${cantidad}</td><td>${formatMoney(sub)}</td>`;
+          tbody.appendChild(tr);
+        });
+        const envioMetodo = localStorage.getItem(LS_ENVIO_KEY) || 'tienda';
+        const envio = envioMetodo === 'postal' ? ENVIO_COST : 0;
+        q('subTotalTxt').textContent = formatMoney(subtotal);
+        q('envioTxt').textContent = formatMoney(envio);
+        q('totalTxt').textContent = formatMoney(subtotal + envio);
+        q('envioInfo').textContent = envioMetodo === 'postal' ? `Envío: postal (${formatMoney(envio)})` : 'Envío: recogida en tienda (₡0)';
+      }
+
+      // escape HTML
+      function escapeHtml(str) {
+        return String(str || "")
+          .replace(/&/g,"&amp;")
+          .replace(/</g,"&lt;")
+          .replace(/>/g,"&gt;")
+          .replace(/"/g,"&quot;")
+          .replace(/'/g,"&#039;");
+      }
+
+      // UI references
+      const form = q('formPago');
+      const numeroEl = q('numeroTarjeta'), fechaEl = q('fechaExp'), cvvEl = q('cvv'), titularEl = q('titular');
+      const errNum = q('errNumero'), errFecha = q('errFecha'), errCvv = q('errCvv'), errTit = q('errTitular');
+      const mensajeOk = q('mensajeExito');
+
+      // Inicializar
+      document.addEventListener('DOMContentLoaded', () => {
+        renderResumen();
+        const cart = readCart();
+        if (!cart.length) {
+          alert('El carrito está vacío. Agrega productos antes de pagar.');
+        }
+      });
+
+      // Validación en tiempo real (limpia errores)
+      numeroEl.addEventListener('input', () => { errNum.classList.remove('visible'); });
+      fechaEl.addEventListener('input', () => { errFecha.classList.remove('visible'); });
+      cvvEl.addEventListener('input', () => { errCvv.classList.remove('visible'); });
+      titularEl.addEventListener('input', () => { errTit.classList.remove('visible'); });
+
+      // Submit
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        let ok = true;
+        const num = (numeroEl.value || '').replace(/\s+/g,'');
+        const fecha = (fechaEl.value || '').trim();
+        const cvv = (cvvEl.value || '').trim();
+        const titular = (titularEl.value || '').trim();
+
+        if (!validarNumeroTarjeta(num)) { errNum.classList.add('visible'); ok = false; } else errNum.classList.remove('visible');
+        if (!validarFechaExp(fecha)) { errFecha.classList.add('visible'); ok = false; } else errFecha.classList.remove('visible');
+        if (!validarCvv(cvv)) { errCvv.classList.add('visible'); ok = false; } else errCvv.classList.remove('visible');
+        if (!validarTitular(titular)) { errTit.classList.add('visible'); ok = false; } else errTit.classList.remove('visible');
+
+        const cart = readCart();
+        if (!cart.length) {
+          alert('El carrito está vacío. No se puede procesar el pago.');
+          ok = false;
+        }
+
+        if (!ok) return;
+
+        // Simulación exitosa: guardamos info no sensible y redirigimos a factura
+        const ultimo4 = num.slice(-4);
+        const pagoInfo = {
+          metodo: 'Tarjeta',
+          titular: titular,
+          ultimo4: ultimo4,
+          fecha_registro: (new Date()).toISOString()
+        };
+
+        try {
+          localStorage.setItem(LS_PAGO_KEY, 'Tarjeta');
+          localStorage.setItem(LS_PAGO_INFO, JSON.stringify(pagoInfo));
+        } catch (e) {
+          console.error('No se pudo guardar info de pago en localStorage', e);
+        }
+
+        // Mostrar confirmación y redirigir a factura en breve
+        mensajeOk.classList.add('show');
+        try {
+          window.dispatchEvent(new Event('cart:update'));
+          window.dispatchEvent(new Event('cart:triggerUpdate'));
+        } catch (e) {}
+
+        setTimeout(() => {
+          window.location.href = 'factura.html';
+        }, 900);
+      });
+
+      // Cancelar
+      q('btnCancelar').addEventListener('click', () => {
+        if (confirm('¿Deseas cancelar el pago y volver al carrito?')) {
+          window.location.href = 'carrito.html';
+        }
+      });
+    })();
+  </script>
+</body>
 </html>

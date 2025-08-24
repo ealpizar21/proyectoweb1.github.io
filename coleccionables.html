@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="estilo.css" />
   <!-- estilos rápidos específicos para esta página (modal / contador / tabla) -->
   <style>
-    /* Contador carrito en header (puedes mover esto a estilo.css si lo prefieres) */
+    /* Contador carrito en header  */
     .cart-icon {
       position: absolute;
       right: 1rem;
@@ -35,14 +35,13 @@
       display:inline-block;
     }
 
-    /* Pequeño estilo para la grid local (si falta en estilo.css) */
+    /* Pequeño estilo para la grid local */
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin-top: 1rem; }
     .card { background: var(--purple); border: 4px solid var(--accent-green); border-radius: 8px; padding: 0.75rem; text-align: center; }
     .card-image img { width:100%; height:auto; border-radius:6px; }
   </style>
 </head>
 <body>
-  <!-- Header (igual a index con contador) -->
   <header class="site-header">
     <div class="container header-content">
       <input type="checkbox" id="menu-toggle" class="menu-toggle" />
@@ -63,7 +62,6 @@
         </ul>
       </nav>
 
-     <!-- Reemplazar el bloque .cart-icon por esto -->
 <div id="cartWidget" class="cart-widget" aria-live="polite">
   <a href="carrito.html" class="cart-widget__link" aria-label="Ver carrito de compras">
     <svg class="cart-widget__icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
@@ -143,7 +141,6 @@
     </section>
   </main>
 
-  <!-- Modal confirmación agregado al carrito (se usa el modal gestionado por script.js) -->
   <div id="addCartModal" class="modal-confirm" aria-hidden="true" role="dialog" aria-label="Producto agregado">
     <div class="modal-confirm__backdrop"></div>
     <div class="modal-confirm__card" role="document">
@@ -176,8 +173,6 @@
     </div>
   </footer>
 
-  <!-- Scripts -->
-  <!-- Asegúrate de que script.js contiene la implementación del carrito, badge y modal -->
   <script src="script.js"></script>
 </body>
 </html>
