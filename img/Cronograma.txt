@@ -1,0 +1,128 @@
+🔹 Semana 1 – Planificación, diseño e inicio del desarrollo
+Día 1-2: Diseño inicial y base del proyecto
+
+Definir nombre del negocio, logotipo y temática.
+
+Crear estructura de carpetas: /css, /js, /img, /json, etc.
+
+Iniciar archivo base index.html y configurar Bootstrap o Tailwind.
+
+Crear navegación base (menu, footer, enlaces funcionales).
+
+Día 3-4: Maquetación y primeras páginas
+
+Crear las páginas necesarias:
+
+Inicio
+
+Productos/Servicios
+
+Detalle del producto
+
+Contacto
+
+Acerca de
+
+Carrito/proceso de compra
+
+Implementar layout base con sistema de columnas (Grid/Flex).
+
+Día 5-6: Estilo visual y contenido inicial
+
+Aplicar paleta de colores, fuentes y estética definida en prototipo.
+
+Agregar el carrusel en la página principal.
+
+Maquetar sección de productos destacados y mostrar productos dummy.
+
+🔹 Semana 2 – Funcionalidades dinámicas y contenido JSON
+ Día 1-2: Catálogo de productos
+
+Crear archivo .json con mínimo 8–12 productos.
+
+Mostrar productos desde JSON con JS dinámicamente.
+
+Estilizar las tarjetas de producto.
+
+Agregar filtrado por categoría.
+
+Día 3-4: Detalle del producto
+
+Página de detalle con datos desde JSON:
+
+Nombre, descripción, precio, stock
+
+Galería de imágenes (mínimo 2)
+
+Envío estimado, reseñas
+
+Día 5-6: Interacción con reseñas
+
+Mostrar reseñas existentes
+
+Crear formulario para agregar nuevas reseñas:
+
+Nombre, comentario, estrellas
+
+Validaciones de entrada
+
+Estilo atractivo y responsivo
+
+🔹 Semana 3 – Carrito, compra, validaciones y publicación
+Día 1-2: Carrito de compras
+
+Permitir agregar productos al carrito
+
+Modificar cantidad, eliminar productos
+
+Calcular subtotal y total automáticamente
+
+Guardar datos en localStorage
+
+Reflejar selección de método de envío:
+
+Postal (con costo) o recogida
+
+ Día 3-4: Pago y validaciones
+
+Simular proceso de pago:
+
+Número de tarjeta (16 dígitos)
+
+Fecha de caducidad (MM/AA o MM/AAAA)
+
+CVV (3 o 4 dígitos)
+
+Nombre del titular
+
+Validaciones de todos los campos
+
+Confirmación visual de compra exitosa
+
+Día 5: Factura y contacto
+
+Mostrar resumen de compra tipo factura
+
+Página de contacto:
+
+Formulario con validaciones
+
+Campos: correo, nombre, fecha nacimiento, género, otros
+
+Implementar CAPTCHA visual (simulado)
+
+Agregar mapa con ubicación (API Google Maps o iframe)
+
+Día 6: Página "Acerca de" y publicación
+
+Página del autor:
+
+Foto, nombre, cédula, correo, descripción
+
+Publicar el sitio (Netlify, Vercel, GitHub Pages…)
+
+Probar responsividad en móvil, tablet, desktop
+
+Revisar ortografía, accesibilidad, navegación
+
+Preparar URL final para entregar
