@@ -7,6 +7,9 @@
   --font-base: "Press Start 2P", cursive, sans-serif;
   /* Nuevo color para bordes */
   --purple-light-border: #5c449e;
+  --carrusel-width: min(900px, 95vw);
+  --carrusel-height: 380px;
+  --radius: 16px;
 }
 
 * {
@@ -119,24 +122,31 @@ body {
   background: var(--accent-green);
 }
 
-.grid {
+#Catalogo.grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1.5rem;
+  margin-top: 20px;
 }
 
 .card {
-  background: var(--purple);
-  border: 4px solid var(--accent-green);
-  border-radius: 8px;
-  padding: 0.75rem;
+  background-color: var(--purple);
+  border: 3px solid var(--accent-green);
+  border-radius: 12px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 20px;
+  padding: 15px;
   text-align: center;
 }
 
 .card-image img {
   width: 100%;
-  height: auto;
-  display: block;
+  height: 280px;
+  object-fit: contain;
+  border-radius: 8px;
 }
 
 .card h3 {
