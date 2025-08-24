@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pago | Bit By Bit</title>
+    <link rel="stylesheet" href="estilo.css" />
+    <style>
+      .payment-form { max-width: 520px; margin: 1rem auto; display:flex; flex-direction:column; gap:0.6rem; }
+      .payment-form label { font-size:0.85rem; }
+      .payment-form input, .payment-form select {
+        padding:0.6rem; border-radius:6px; border:1px solid #ccc; font-family:var(--font-base);
+      }
+      .mensaje-error { color: #ffb3b3; background: rgba(255,0,0,0.06); padding:0.6rem; border-radius:6px; margin-top:0.6rem; display:none; }
+      .mensaje-error.show { display:block; }
+      @media (max-width:600px) { .payment-form { padding: 0 1rem; } }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="site-header">
+      <div class="container header-content">
+        <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+        <label for="menu-toggle" class="menu-icon" aria-hidden="true">&#9776;</label>
+
+        <a href="index.html" class="logo" aria-label="Ir al inicio">
+          <img src="img/Logo_2.png" alt="Bit By Bit logo" />
+        </a>
+
+        <nav class="responsive-nav" aria-label="Menú principal">
+          <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="coleccionables.html">Coleccionables</a></li>
+            <li><a href="carrito.html">Carrito</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="productos-destacados">
+        <h2>Datos de Pago</h2>
+
+        <form id="formPago" class="payment-form" novalidate>
+          <label for="tarjeta">Número de tarjeta</label>
+          <input type="text" id="tarjeta" maxlength="16" inputmode="numeric" pattern="\d{16}" placeholder="1234567812345678" required />
+
+          <label for="caducidad">Fecha de caducidad (MM/AA o MM/AAAA)</label>
+          <input type="text" id="caducidad" placeholder="MM/AA o MM/AAAA" required />
+
+          <label for="cvv">CVV</label>
+          <input type="text" id="cvv" maxlength="4" inputmode="numeric" placeholder="123" required />
+
+          <label for="titular">Nombre del titular</label>
+          <input type="text" id="titular" maxlength="60" placeholder="Juan Pérez" required />
+
+          <button class="btn-Comprar" type="submit">Finalizar Compra</button>
+        </form>
+
+        <div id="mensajeError" class="mensaje-error" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="container footer-content">
+        <span>Bit By Bit</span>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

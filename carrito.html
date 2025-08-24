@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Carrito de Compras | Bit By Bit</title>
+    <link rel="stylesheet" href="estilo.css" />
+    <style>
+      /* Ajustes rápidos para tabla del carrito */
+      #tablaCarrito {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1rem;
+      }
+      #tablaCarrito th, #tablaCarrito td {
+        padding: 0.6rem;
+        border: 2px solid rgba(255,255,255,0.04);
+        text-align: left;
+        font-family: var(--font-base);
+      }
+      #tablaCarrito input[type="number"] {
+        width: 72px;
+        padding: 0.25rem;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-family: var(--font-base);
+      }
+      .btnEliminar {
+        background: transparent;
+        color: var(--text-light);
+        border: 1px solid rgba(255,255,255,0.08);
+        padding: 0.35rem 0.6rem;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      .envio-opciones { margin: 1rem 0; }
+      #total { margin-top: 1rem; font-size: 1.1rem; }
+      @media (max-width: 720px) {
+        #tablaCarrito th, #tablaCarrito td { font-size: 0.85rem; padding: 0.4rem; }
+        #tablaCarrito input[type="number"] { width: 56px; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header (igual que index) -->
+    <header class="site-header">
+      <div class="container header-content">
+        <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+        <label for="menu-toggle" class="menu-icon" aria-hidden="true">&#9776;</label>
+
+        <a href="index.html" class="logo" aria-label="Ir al inicio">
+          <img src="img/Logo_2.png" alt="Bit By Bit logo" />
+        </a>
+
+        <nav class="responsive-nav" aria-label="Menú principal">
+          <ul>
+            <li><a href="#">Consolas</a></li>
+            <li><a href="#">Juegos</a></li>
+            <li><a href="#">Periféricos</a></li>
+            <li><a href="coleccionables.html">Coleccionables</a></li>
+            <li><a href="PregFrec.html">Preguntas Frecuentes</a></li>
+            <li><a href="blog.html">Blog</a></li>
+            <li><a href="Acerca de.html">Acerca de</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="productos-destacados">
+        <h2>Carrito de Compras</h2>
+
+        <div style="overflow-x:auto;">
+          <table id="tablaCarrito" aria-label="Tabla de carrito">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Subtotal</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div class="envio-opciones">
+          <h3>Tipo de envío</h3>
+          <label>
+            <input type="radio" name="envio" value="tienda" checked>
+            Recoger en tienda (₡0)
+          </label><br>
+          <label>
+            <input type="radio" name="envio" value="postal">
+            Envío postal (₡3500)
+          </label>
+        </div>
+
+        <h3 id="total">Total: ₡0.00</h3>
+
+        <div style="margin-top:1rem;">
+          <a href="pago.html" class="btn-Comprar">Proceder al pago</a>
+          <a href="coleccionables.html" class="btn-VM" style="margin-left:0.6rem;">Seguir comprando</a>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer (igual que index) -->
+    <footer class="site-footer">
+      <div class="container footer-content">
+        <a href="https://www.instagram.com" aria-label="Instagram">
+          <img src="img/Instagram.png" alt="Instagram" />
+        </a>
+        <span>Bit By Bit</span>
+        <a href="https://www.facebook.com/?locale=es_LA" aria-label="Facebook">
+          <img src="img/Facebook.png" alt="Facebook" />
+        </a>
+        <span>Bit By Bit</span>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

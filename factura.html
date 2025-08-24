@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Factura | Bit By Bit</title>
+    <link rel="stylesheet" href="estilo.css" />
+    <style>
+      #resumenFactura table { width:100%; border-collapse: collapse; margin-bottom: 1rem; }
+      #resumenFactura th, #resumenFactura td { padding:0.6rem; border:2px solid rgba(255,255,255,0.04); text-align:left; }
+      #resumenFactura h3 { margin-top: 0.6rem; }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="site-header">
+      <div class="container header-content">
+        <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+        <label for="menu-toggle" class="menu-icon" aria-hidden="true">&#9776;</label>
+
+        <a href="index.html" class="logo" aria-label="Ir al inicio">
+          <img src="img/Logo_2.png" alt="Bit By Bit logo" />
+        </a>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="productos-destacados">
+        <h2>Factura de Compra</h2>
+        <div id="resumenFactura" aria-live="polite"></div>
+        <div style="margin-top:1rem;">
+          <a href="index.html" class="btn-VM">Volver al inicio</a>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="container footer-content">
+        <span>Bit By Bit</span>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

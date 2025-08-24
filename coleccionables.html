@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Coleccionables | Bit By Bit</title>
+  <link rel="stylesheet" href="estilo.css" />
+  <!-- estilos rápidos específicos para esta página (modal / contador / tabla) -->
+  <style>
+    /* Contador carrito en header (puedes mover esto a estilo.css si lo prefieres) */
+    .cart-icon {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display:flex;
+      align-items:center;
+      gap:0.5rem;
+    }
+    .cart-icon a { color: var(--text-light); text-decoration:none; display:flex; align-items:center; gap:0.4rem; }
+    .cart-bubble {
+      background: var(--accent-green);
+      color: var(--purple-dark);
+      font-weight: bold;
+      border-radius: 999px;
+      padding: 0.12rem 0.45rem;
+      font-size: 0.8rem;
+      min-width: 22px;
+      text-align: center;
+    }
+
+    /* Carta / boton añadir */
+    .producto-card .btn-add-cart {
+      margin-top: 8px;
+      display:inline-block;
+    }
+
+    /* Pequeño estilo para la grid local (si falta en estilo.css) */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin-top: 1rem; }
+    .card { background: var(--purple); border: 4px solid var(--accent-green); border-radius: 8px; padding: 0.75rem; text-align: center; }
+    .card-image img { width:100%; height:auto; border-radius:6px; }
+  </style>
+</head>
+<body>
+  <!-- Header (igual a index con contador) -->
+  <header class="site-header">
+    <div class="container header-content">
+      <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+      <label for="menu-toggle" class="menu-icon" aria-hidden="true">&#9776;</label>
+
+      <a href="index.html" class="logo" aria-label="Ir al inicio">
+        <img src="img/Logo_2.png" alt="Bit By Bit logo" />
+      </a>
+
+      <nav class="responsive-nav" aria-label="Menú principal">
+        <ul>
+          <li><a href="#">Consolas</a></li>
+            <li><a href="#">Juegos</a></li>
+            <li><a href="#">Periféricos</a></li>
+            <li><a href="PregFrec.html">Preguntas Frecuentes</a></li>
+            <li><a href="blog.html">Blog</a></li>
+            <li><a href="Acerca de.html">Acerca de</a></li>
+        </ul>
+      </nav>
+
+     <!-- Reemplazar el bloque .cart-icon por esto -->
+<div id="cartWidget" class="cart-widget" aria-live="polite">
+  <a href="carrito.html" class="cart-widget__link" aria-label="Ver carrito de compras">
+    <svg class="cart-widget__icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+      <path fill="currentColor" d="M7 4h-2l-1 2H2v2h1l3.6 7.59-1.35 2.44A1 1 0 0 0 5.99 19H19v-2H6.42c.03 0 .06-.01.09-.03l1.1-1.98H18a1 1 0 0 0 .92-.62l3-7A1 1 0 0 0 21 6H6.21l-.94-2zM7 20a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
+    </svg>
+    <span id="cartCount" class="cart-widget__badge">0</span>
+  </a>
+</div>
+
+  </header>
+
+  <!-- Main -->
+  <main class="container">
+    <section class="productos-destacados">
+      <h2>Coleccionables</h2>
+
+      <div class="filtro-wrap">
+        <label for="filtroCategoria">Filtrar por:</label>
+        <select id="filtroCategoria" aria-label="Filtrar por categoría">
+          <option value="todos">Todos</option>
+          <option value="figuras">Figuras</option>
+          <option value="posters">Posters</option>
+        </select>
+        <input id="buscar" type="search" placeholder="Buscar nombre..." aria-label="Buscar productos">
+      </div>
+
+      <!-- Catálogo -->
+      <div id="catalogo" class="grid">
+        <!-- Producto 1 -->
+        <div class="producto-card">
+          <div class="card" tabindex="0">
+            <div class="card-image">
+              <img src="img/Zelda.png" alt="Figura Link Edición Especial">
+            </div>
+            <h3>Figura Link Edición Especial</h3>
+            <p class="precio">₡15000.0</p>
+            <p class="stock">Disponible online y en tienda</p>
+            <div style="margin-top:8px; display:flex; gap:6px; justify-content:center;">
+              <a class="btn-Comprar" href="detalle_coleccionable.html?id=1">Ver detalle</a>
+              <button class="btn-VM btn-add-cart" data-id="1">Añadir al carrito</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Producto 2 -->
+        <div class="producto-card">
+          <div class="card" tabindex="0">
+            <div class="card-image">
+              <img src="img/funkoKratos.png" alt="Funko Kratos">
+            </div>
+            <h3>Funko Kratos</h3>
+            <p class="precio">₡10500.0</p>
+            <p class="stock">Disponible solo online</p>
+            <div style="margin-top:8px; display:flex; gap:6px; justify-content:center;">
+              <a class="btn-Comprar" href="detalle_coleccionable.html?id=2">Ver detalle</a>
+              <button class="btn-VM btn-add-cart" data-id="2">Añadir al carrito</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Producto 3 -->
+        <div class="producto-card">
+          <div class="card" tabindex="0">
+            <div class="card-image">
+              <img src="img/PosterMarioRetro.png" alt="Poster Retro (Ejemplo)">
+            </div>
+            <h3>Poster Retro (Ejemplo)</h3>
+            <p class="precio">₡12000.00</p>
+            <p class="stock">Disponible en tienda física</p>
+            <div style="margin-top:8px; display:flex; gap:6px; justify-content:center;">
+              <a class="btn-Comprar" href="detalle_coleccionable.html?id=3">Ver detalle</a>
+              <button class="btn-VM btn-add-cart" data-id="3">Añadir al carrito</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal confirmación agregado al carrito (se usa el modal gestionado por script.js) -->
+  <div id="addCartModal" class="modal-confirm" aria-hidden="true" role="dialog" aria-label="Producto agregado">
+    <div class="modal-confirm__backdrop"></div>
+    <div class="modal-confirm__card" role="document">
+      <button id="modalClose" class="modal-confirm__close" aria-label="Cerrar">✕</button>
+      <div class="modal-confirm__content">
+        <img id="modalProdImg" src="img/placeholder.png" alt="" class="modal-confirm__img" />
+        <div class="modal-confirm__info">
+          <h3 id="modalProdName">Nombre del producto</h3>
+          <p id="modalProdMsg">Se agregó al carrito.</p>
+          <div class="modal-confirm__actions">
+            <a href="carrito.html" class="btn-Comprar">Ir al carrito</a>
+            <button id="modalContinue" class="btn-VM">Seguir comprando</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <a href="https://www.instagram.com" aria-label="Instagram">
+        <img src="img/Instagram.png" alt="Instagram" />
+      </a>
+      <span>Bit By Bit</span>
+      <a href="https://www.facebook.com/?locale=es_LA" aria-label="Facebook">
+        <img src="img/Facebook.png" alt="Facebook" />
+      </a>
+      <span>Bit By Bit</span>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <!-- Asegúrate de que script.js contiene la implementación del carrito, badge y modal -->
+  <script src="script.js"></script>
+</body>
+</html>
