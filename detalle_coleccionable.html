@@ -3,18 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Detalle - Coleccionable</title>
-  <!-- carga tu CSS global (contiene modal y cart-widget) -->
+  <title>Detalle - Producto</title>
   <link rel="stylesheet" href="estilo.css">
   <style>
-    /* Estilos mínimos locales que no están en estilo.css (solo layout del detalle) */
-    .galeria img { width: 180px; height: auto; margin-right:0.5rem; border-radius:6px; border:2px solid var(--accent-green); }
+    .galeria img { width: 180px; height: auto; margin-right:0.5rem; border-radius:6px; border:2px solid var(--accent-green); cursor:pointer; }
     .detalle-grid { display:flex; gap:1.5rem; flex-wrap:wrap; align-items:flex-start; }
     .detalle-info { flex:1; min-width:240px; }
     .galeria { display:flex; gap:0.5rem; flex-wrap:wrap; margin:0.5rem 0 1rem 0; }
     .estrella { color: var(--accent-green); font-size:1.1rem; margin-right:2px;}
     .reseña { background: var(--purple-light); padding:0.75rem; border-left:4px solid var(--accent-green); border-radius:6px; margin-bottom:0.6rem; }
-    /* Mantener estilos para back-link y responsividad si hace falta */
     .back-link { text-align:center; margin-top:1.25rem; }
     .back-link a { color:var(--accent-green); text-decoration:none; border-bottom:1px dashed var(--accent-green); }
     @media (max-width:720px) {
@@ -36,17 +33,16 @@
       <nav class="responsive-nav" aria-label="Menú principal">
         <ul>
           <li><a href="index.html">Inicio</a></li>
-          <li><a href="#">Consolas</a></li>
-          <li><a href="#">Juegos</a></li>
-          <li><a href="#">Periféricos</a></li>
-          <li><a href="coleccionables.html" class="active" aria-current="page">Coleccionables</a></li>
+          <li><a href="Consolas.html">Consolas</a></li>
+          <li><a href="Juegos.html">Juegos</a></li>
+          <li><a href="Perifericos.html">Periféricos</a></li>
+          <li><a href="coleccionables.html">Coleccionables</a></li>
           <li><a href="PregFrec.html">Preguntas Frecuentes</a></li>
           <li><a href="blog.html">Blog</a></li>
           <li><a href="Acerca de.html">Acerca de</a></li>
         </ul>
       </nav>
 
-      <!-- cart widget (usa las reglas en estilo.css) -->
       <div id="cartWidget" class="cart-widget" aria-live="polite">
         <a href="carrito.html" class="cart-widget__link" aria-label="Ver carrito de compras">
           <svg class="cart-widget__icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
@@ -60,7 +56,7 @@
 
   <main class="container">
     <div id="detalleProducto"></div>
-    <div class="back-link"><a href="coleccionables.html">← Volver al catálogo</a></div>
+    <div class="back-link"><a href="index.html">← Volver al catálogo</a></div>
   </main>
 
   <footer class="site-footer">
@@ -76,19 +72,17 @@
     </div>
   </footer>
 
-  <!-- Lightbox (ya usado por script.js) -->
+  <!-- Lightbox -->
   <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Vista ampliada de imagen">
     <button class="lb-close" aria-label="Cerrar" id="lbClose">Cerrar</button>
     <img src="" alt="Imagen ampliada" class="lb-img" id="lbImg">
   </div>
 
-  <!-- Modal confirmación agregado al carrito (usa estilos de estilo.css) -->
+  <!-- Modal confirmación agregado al carrito -->
   <div id="addCartModal" class="modal-confirm" aria-hidden="true" role="dialog" aria-label="Producto agregado al carrito">
     <div class="modal-confirm__backdrop" tabindex="-1"></div>
-
     <div class="modal-confirm__card" role="document" aria-modal="true">
       <button id="modalClose" class="modal-confirm__close" aria-label="Cerrar modal">✕</button>
-
       <div class="modal-confirm__content">
         <img id="modalProdImg" class="modal-confirm__img" src="img/placeholder.png" alt="Imagen del producto" />
         <div class="modal-confirm__info">
@@ -103,45 +97,6 @@
     </div>
   </div>
 
-  <!-- Tu script central (catálogo, detalle, carrito, modal) -->
   <script src="script.js"></script>
-
-  <!-- Script ligero local para cierre/abrir seguro del modal (comportamiento complementario) -->
-  <script>
-    (function () {
-      // Se asegura de que el modal pueda cerrarse desde esta página aunque script.js no tenga handlers
-      function qs(sel){return document.querySelector(sel);}
-      const modal = qs('#addCartModal');
-      if (!modal) return;
-      const backdrop = modal.querySelector('.modal-confirm__backdrop');
-      const closeBtn = qs('#modalClose');
-      const continueBtn = qs('#modalContinue');
-
-      function closeModal(){
-        modal.classList.remove('open');
-        modal.setAttribute('aria-hidden','true');
-      }
-      function openModal(){
-        modal.classList.add('open');
-        modal.setAttribute('aria-hidden','false');
-      }
-
-      // Vincular botones si existen
-      if (closeBtn) closeBtn.addEventListener('click', closeModal);
-      if (continueBtn) continueBtn.addEventListener('click', closeModal);
-      if (backdrop) backdrop.addEventListener('click', (e) => {
-        if (e.target === backdrop) closeModal();
-      });
-
-      // Si script.js controla la apertura (por ejemplo addToCartById), el modal ya será visible.
-      // Aquí solo añadimos escape key handler local:
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
-      });
-
-      // Exponer funciones para debugging / uso desde la consola (opcional)
-      window.__detalleModal = { open: openModal, close: closeModal };
-    })();
-  </script>
 </body>
 </html>

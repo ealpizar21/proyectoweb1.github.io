@@ -1,221 +1,75 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <!-- Conexión a Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Importa Press Start 2P -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
-      rel="stylesheet"
-    />
-    <!-- Bootstrap CSS para el carrusel -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bit By Bit | Juegos</title>
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bit By Bit | Juegos</title>
+  <link rel="stylesheet" href="estilo.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-content">
+      <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+      <label for="menu-toggle" class="menu-icon" aria-hidden="true">&#9776;</label>
 
-    <!-- Tu CSS (reemplaza/añade el contenido que te pasé anteriormente en este archivo) -->
-    <link rel="stylesheet" href="estilo.css" />
-  </head>
-  <body>
-    <!-- Header y navegación -->
-    <header class="site-header">
-      <div class="container header-content">
-        <!-- Botón hamburguesa -->
-        <input type="checkbox" id="menu-toggle" class="menu-toggle" />
-        <label for="menu-toggle" class="menu-icon" aria-hidden="true"
-          >&#9776;</label
-        >
+      <a href="index.html" class="logo" aria-label="Ir al inicio">
+        <img src="img/Logo_2.png" alt="Bit By Bit logo" />
+      </a>
 
-        <!-- Logo centrado -->
-        <a href="index.html" class="logo" aria-label="Ir al inicio">
-          <img src="img/Logo_2.png" alt="Bit By Bit logo" />
+      <nav class="responsive-nav" aria-label="Menú principal">
+        <ul>
+          <li><a href="Consolas.html">Consolas</a></li>
+          <li><a href="Juegos.html">Juegos</a></li>
+          <li><a href="Perifericos.html">Periféricos</a></li>
+          <li><a href="coleccionables.html">Coleccionables</a></li>
+          <li><a href="PregFrec.html">Preguntas Frecuentes</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="Acerca de.html">Acerca de</a></li>
+        </ul>
+      </nav>
+
+      <div id="cartWidget" class="cart-widget" aria-live="polite">
+        <a href="carrito.html" class="cart-widget__link" aria-label="Ver carrito de compras">
+          <!-- svg -->
+          <svg class="cart-widget__icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M7 4h-2l-1 2H2v2h1l3.6 7.59-1.35 2.44A1 1 0 0 0 5.99 19H19v-2H6.42c.03 0 .06-.01.09-.03l1.1-1.98H18a1 1 0 0 0 .92-.62l3-7A1 1 0 0 0 21 6H6.21l-.94-2zM7 20a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
+          </svg>
+          <span id="cartCount" class="cart-widget__badge">0</span>
         </a>
-
-        <!-- Menú combinado -->
-        <nav class="responsive-nav" aria-label="Menú principal">
-          <ul>
-            <li><a href="Consolas.html">Consolas</a></li>
-            <li><a href="Juegos.html">Juegos</a></li>
-            <li><a href="Perifericos.html">Periféricos</a></li>
-            <li><a href="coleccionables.html">Coleccionables</a></li>
-            <li><a href="PregFrec.html">Preguntas Frecuentes</a></li>
-            <li><a href="blog.html">Blog</a></li>
-            <li><a href="Acerca de.html">Acerca de</a></li>
-          </ul>
-        </nav>
-
-        <!-- Cart widget -->
-        <div id="cartWidget" class="cart-widget" aria-live="polite">
-          <a
-            href="carrito.html"
-            class="cart-widget__link"
-            aria-label="Ver carrito de compras"
-          >
-            <!-- SVG inline (no necesitas archivo extra) -->
-            <svg
-              class="cart-widget__icon"
-              viewBox="0 0 24 24"
-              width="24"
-              height="24"
-              aria-hidden="true"
-              focusable="false"
-            >
-              <path
-                fill="currentColor"
-                d="M7 4h-2l-1 2H2v2h1l3.6 7.59-1.35 2.44A1 1 0 0 0 5.99 19H19v-2H6.42c.03 0 .06-.01.09-.03l1.1-1.98H18a1 1 0 0 0 .92-.62l3-7A1 1 0 0 0 21 6H6.21l-.94-2zM7 20a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"
-              />
-            </svg>
-            <span id="cartCount" class="cart-widget__badge">0</span>
-          </a>
-        </div>
-        <!-- /Cart widget -->
       </div>
-    </header>
 
-    <main class="container">
-      <div class="Imagen-transparente">
-        <section class="productos-destacados">
-          <h2>Juegos</h2>
-
-          <div class="filtro-wrap">
-            <label for="filtroCategoria">Filtrar por:</label>
-            <select id="filtroCategoria" aria-label="Filtrar por categoría">
-              <option value="todos">Todos</option>
-              <option value="Play Station">Play Station</option>
-              <option value="Xbox">Xbox</option>
-            </select>
-            <input
-              id="buscar"
-              type="search"
-              placeholder="Buscar nombre..."
-              aria-label="Buscar productos"
-            />
-          </div>
-
-          <!-- Catálogo -->
-          <div id="catalogo" class="grid">
-            <!-- Producto 1 -->
-            <div class="producto-card">
-              <div class="card" tabindex="0">
-                <div class="card-image">
-                  <img src="img/God Of War.jpg" alt="Img 1" />
-                </div>
-                <div style="color: white">
-                  <h3>God Of War (PS2-Precintado)</h3>
-                  <p class="precio">₡25.000</p>
-                  <p class="stock">Disponible online y en tienda</p>
-                </div>
-
-                <a class="btn-Comprar" href="detalle.html?tipo=juegos&id=1"
-                  >Ver detalle</a
-                >
-                <button class="btn-VM btn-add-cart" data-id="1">
-                  Añadir al carrito
-                </button>
-              </div>
-            </div>
-
-            <!-- Producto 2 -->
-            <div class="producto-card">
-              <div class="card" tabindex="0">
-                <div class="card-image">
-                  <img src="img/Forza.jpg" alt="img 2" />
-                </div>
-                <div style="color: white">
-                  <h3>Forza Horizon 5</h3>
-                  <p class="precio">₡46.500</p>
-                  <p class="stock">Disponible solo online</p>
-                </div>
-
-                <a class="btn-Comprar" href="detalle.html?tipo=juegos&id=2"
-                  >Ver detalle</a
-                >
-                <button class="btn-VM btn-add-cart" data-id="2">
-                  Añadir al carrito
-                </button>
-              </div>
-            </div>
-
-            <!-- Producto 3 -->
-            <div class="producto-card">
-              <div class="card" tabindex="0">
-                <div class="card-image">
-                  <img src="img/Halo CE.jpg" alt="img 3" />
-                </div>
-                <div style="color: white">
-                  <h3>HALO : Combat Evolved</h3>
-                  <p class="precio">₡55.000</p>
-                  <p class="stock">Disponible en tienda física</p>
-                </div>
-                <a class="btn-Comprar" href="detalle.html?tipo=juegos&id=3"
-                  >Ver detalle</a
-                >
-                <button class="btn-VM btn-add-cart" data-id="3">
-                  Añadir al carrito
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-    </main>
-
-    <!-- Modal confirmación agregado al carrito (se usa el modal gestionado por script.js) -->
-    <div
-      id="addCartModal"
-      class="modal-confirm"
-      aria-hidden="true"
-      role="dialog"
-      aria-label="Producto agregado"
-    >
-      <div class="modal-confirm__backdrop"></div>
-      <div class="modal-confirm__card" role="document">
-        <button
-          id="modalClose"
-          class="modal-confirm__close"
-          aria-label="Cerrar"
-        >
-          ✕
-        </button>
-        <div class="modal-confirm__content">
-          <img
-            id="modalProdImg"
-            src="img/placeholder.png"
-            alt=""
-            class="modal-confirm__img"
-          />
-          <div class="modal-confirm__info">
-            <h3 id="modalProdName">Nombre del producto</h3>
-            <p id="modalProdMsg">Se agregó al carrito.</p>
-            <div class="modal-confirm__actions">
-              <a href="carrito.html" class="btn-Comprar">Ir al carrito</a>
-              <button id="modalContinue" class="btn-VM">
-                Seguir comprando
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
+  </header>
 
-    <footer class="site-footer">
-      <div class="container footer-content">
-        <a href="https://www.instagram.com" aria-label="Instagram"
-          ><img src="img/Instagram.png" alt="Instagram"
-        /></a>
-        <span>Bit By Bit</span>
-
-        <a href="https://www.facebook.com/?locale=es_LA" aria-label="Facebook"
-          ><img src="img/Facebook.png" alt="Facebook"
-        /></a>
-        <span>Bit By Bit</span>
+  <main class="container">
+    <section class="productos-destacados">
+      <h2>Juegos</h2>
+      <div class="filtro-wrap">
+        <label for="filtroCategoria">Filtrar por:</label>
+        <select id="filtroCategoria" aria-label="Filtrar por categoría">
+          <option value="todos">Todos</option>
+          <option value="Play Station">Play Station</option>
+          <option value="Xbox">Xbox</option>
+        </select>
+        <input id="buscar" type="search" placeholder="Buscar nombre..." aria-label="Buscar productos" />
       </div>
-    </footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  </body>
+
+      <div id="catalogo" class="grid"></div>
+    </section>
+  </main>
+
+  <!-- modal, footer ... -->
+  <div id="addCartModal" class="modal-confirm" aria-hidden="true" role="dialog" aria-label="Producto agregado">...</div>
+   <footer class="site-footer">
+    <div class="container footer-content">
+      <a href="https://www.instagram.com" aria-label="Instagram"><img src="img/Instagram.png" alt="Instagram" /></a>
+      <span>Bit By Bit</span>
+      <a href="https://www.facebook.com/?locale=es_LA" aria-label="Facebook"><img src="img/Facebook.png" alt="Facebook" /></a>
+      <span>Bit By Bit</span>
+    </div>
+  </footer>
+
+  <script>window.__tipoPage = 'juegos';</script>
+  <script src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

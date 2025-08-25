@@ -1,7 +1,7 @@
 {
   "coleccionables": [
     {
-      "id": 1,
+      "id": 1001,
       "nombre": "Figura Link Edición Especial",
       "precio": 15000.0,
       "categoria": "figuras",
@@ -27,13 +27,16 @@
       ]
     },
     {
-      "id": 2,
+      "id": 1002,
       "nombre": "Funko Pop Kratos de God of War",
       "precio": 10500.0,
       "categoria": "figuras",
       "stock": "Disponible solo online",
       "descripcion": "Funko Pop de Kratos con diseño clásico, ideal para coleccionistas de god of war.",
-      "imagenes": ["img/funkoKratos.png", "img/FunkoKratos_Caja.png"],
+      "imagenes": [
+        "img/funkoKratos.png",
+        "img/FunkoKratos_Caja.png"
+      ],
       "entrega": "2-4 días hábiles",
       "envio": "₡2500",
       "reseñas": [
@@ -50,13 +53,16 @@
       ]
     },
     {
-      "id": 3,
+      "id": 1003,
       "nombre": "Poster Retro Mario Bros",
       "precio": 12000.0,
       "categoria": "posters",
       "stock": "Disponible en tienda física",
       "descripcion": "Poster retro de Mario Bros de los años 90, tamaño 50x70 cm, impresión en papel de alta calidad.",
-      "imagenes": ["img/PosterMarioRetro.png", "img/PosterMarioNegro.png"],
+      "imagenes": [
+        "img/PosterMarioRetro.png",
+        "img/PosterMarioNegro.png"
+      ],
       "entrega": "Disponible para recoger en tienda",
       "envio": "No disponible",
       "reseñas": [
@@ -70,6 +76,114 @@
           "comentario": "La impresión es buena, pero esperaba un marco.",
           "puntuacion": 4
         }
+      ]
+    }
+  ],
+  "juegos": [
+    {
+      "id": 3001,
+      "nombre": "God Of War (PS2)",
+      "precio": 25000.0,
+      "categoria": "Play Station",
+      "stock": 10,
+      "descripcion": "Juego de acción y aventura para PlayStation 2.",
+      "imagenes": [
+        "img/God Of War.jpg",
+        "img/GodofWar2.jpg"
+      ]
+    },
+    {
+      "id": 3002,
+      "nombre": "Forza Horizon 5",
+      "precio": 46500.0,
+      "categoria": "Xbox",
+      "stock": 15,
+      "descripcion": "Juego de carreras en mundo abierto para Xbox y PC.",
+      "imagenes": [
+        "img/Forza.jpg",
+        "img/forza2.jpg"
+      ]
+    },
+    {
+      "id": 3003,
+      "nombre": "Halo: Combat Evolved",
+      "precio": 55000.0,
+      "categoria": "Xbox",
+      "stock": 8,
+      "descripcion": "Shooter clásico en primera persona para Xbox.",
+      "imagenes": [
+        "img/Halo CE.jpg"
+      ]
+    }
+  ],
+  "consolas": [
+    {
+      "id": 2001,
+      "nombre": "PlayStation 2",
+      "precio": 93500.0,
+      "categoria": "Play Station",
+      "stock": 5,
+      "descripcion": "La última consola de Sony con gráficos de próxima generación y tiempos de carga ultrarrápidos.",
+      "imagenes": [
+        "img/PS2.jpg",
+        "img/PS2 2.jpg"
+      ]
+    },
+    {
+      "id": 2002,
+      "nombre": "PS VITA",
+      "precio": 90000.0,
+      "categoria": "Play Station",
+      "stock": 7,
+      "descripcion": "La consola portátil con catálogo exclusivo y gran ergonomía.",
+      "imagenes": [
+        "img/psvita.jpg"
+      ]
+    },
+    {
+      "id": 2003,
+      "nombre": "Nintendo 3Ds",
+      "precio": 70000.0,
+      "categoria": "Nintendo",
+      "stock": 12,
+      "descripcion": "Consola híbrida que puedes usar como portátil o conectada a la TV.",
+      "imagenes": [
+        "img/ds.jpg"
+      ]
+    }
+  ],
+  "perifericos": [
+    {
+      "id": 4001,
+      "nombre": "Control Inalámbrico PS5",
+      "precio": 39000.0,
+      "categoria": "Play Station",
+      "stock": 20,
+      "descripcion": "Control inalámbrico con diseño ergonómico y conectividad Bluetooth.",
+      "imagenes": [
+        "img/control ps5.png"
+      ]
+    },
+    {
+      "id": 4002,
+      "nombre": "Auriculares Gaming Astro a50",
+      "precio": 155500.0,
+      "categoria": "Auriculares",
+      "stock": 15,
+      "descripcion": "Auriculares con sonido envolvente y micrófono ajustable para una experiencia de juego inmersiva.",
+      "imagenes": [
+        "img/astro.png"
+      ]
+    },
+    {
+      "id": 4003,
+      "nombre": "Teclado Mecánico Logitech K380",
+      "precio": 22000.0,
+      "categoria": "Teclados",
+      "stock": 10,
+      "descripcion": "Teclado mecánico con switches de alta calidad para gamers.",
+      "imagenes": [
+        "img/teclado.png"
       ]
     }
   ]
