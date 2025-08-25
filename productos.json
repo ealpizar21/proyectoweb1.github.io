@@ -33,10 +33,7 @@
       "categoria": "figuras",
       "stock": "Disponible solo online",
       "descripcion": "Funko Pop de Kratos con diseño clásico, ideal para coleccionistas de god of war.",
-      "imagenes": [
-        "img/funkoKratos.png",
-        "img/FunkoKratos_Caja.png"
-      ],
+      "imagenes": ["img/funkoKratos.png", "img/FunkoKratos_Caja.png"],
       "entrega": "2-4 días hábiles",
       "envio": "₡2500",
       "reseñas": [
@@ -59,10 +56,7 @@
       "categoria": "posters",
       "stock": "Disponible en tienda física",
       "descripcion": "Poster retro de Mario Bros de los años 90, tamaño 50x70 cm, impresión en papel de alta calidad.",
-      "imagenes": [
-        "img/PosterMarioRetro.png",
-        "img/PosterMarioNegro.png"
-      ],
+      "imagenes": ["img/PosterMarioRetro.png", "img/PosterMarioNegro.png"],
       "entrega": "Disponible para recoger en tienda",
       "envio": "No disponible",
       "reseñas": [

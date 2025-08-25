@@ -111,7 +111,7 @@
                   <p class="stock">Disponible en tienda física y online</p>
                 </div>
 
-                <a class="btn-Comprar" href="detalle_coleccionable.html?id=1"
+                <a class="btn-Comprar" href="detalle.html?tipo=perifericos&id=1"
                   >Ver detalle</a
                 >
                 <button class="btn-VM btn-add-cart" data-id="1">
@@ -132,10 +132,10 @@
                   <p class="stock">Disponible solo en tienda física</p>
                 </div>
 
-                <a class="btn-Comprar" href="detalle_coleccionable.html?id=2"
+                <a class="btn-Comprar" href="detalle.html?tipo=perifericos&id=3"
                   >Ver detalle</a
                 >
-                <button class="btn-VM btn-add-cart" data-id="2">
+                <button class="btn-VM btn-add-cart" data-id="3">
                   Añadir al carrito
                 </button>
               </div>
@@ -152,10 +152,10 @@
                   <p class="precio">₡155.500</p>
                   <p class="stock">Disponible en tienda física y online</p>
                 </div>
-                <a class="btn-Comprar" href="detalle_coleccionable.html?id=3"
+                <a class="btn-Comprar" href="detalle.html?tipo=perifericos&id=2"
                   >Ver detalle</a
                 >
-                <button class="btn-VM btn-add-cart" data-id="3">
+                <button class="btn-VM btn-add-cart" data-id="2">
                   Añadir al carrito
                 </button>
               </div>
@@ -164,17 +164,50 @@
         </section>
       </div>
     </main>
-
-     <footer class="site-footer">
+    <div
+      id="addCartModal"
+      class="modal-confirm"
+      aria-hidden="true"
+      role="dialog"
+      aria-label="Producto agregado"
+    >
+      <div class="modal-confirm__backdrop"></div>
+      <div class="modal-confirm__card" role="document">
+        <button
+          id="modalClose"
+          class="modal-confirm__close"
+          aria-label="Cerrar"
+        >
+          ✕
+        </button>
+        <div class="modal-confirm__content">
+          <img
+            id="modalProdImg"
+            src="img/placeholder.png"
+            alt=""
+            class="modal-confirm__img"
+          />
+          <div class="modal-confirm__info">
+            <h3 id="modalProdName">Nombre del producto</h3>
+            <p id="modalProdMsg">Se agregó al carrito.</p>
+            <div class="modal-confirm__actions">
+              <a href="carrito.html" class="btn-Comprar">Ir al carrito</a>
+              <button id="modalContinue" class="btn-VM">
+                Seguir comprando
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="site-footer">
       <div class="container footer-content">
         <a href="https://www.instagram.com" aria-label="Instagram"
           ><img src="img/Instagram.png" alt="Instagram"
         /></a>
         <span>Bit By Bit</span>
 
-        <a
-          href="https://www.facebook.com/?locale=es_LA"
-          aria-label="Facebook"
+        <a href="https://www.facebook.com/?locale=es_LA" aria-label="Facebook"
           ><img src="img/Facebook.png" alt="Facebook"
         /></a>
         <span>Bit By Bit</span>
