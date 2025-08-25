@@ -61,9 +61,9 @@ function renderizarComentarios() {
   const todos = [...comentarios];
 
   // Puedes también incluir los nuevos si quieres:
-  // ratings.forEach((r, i) => {
-  //   todos.push({ rating: r, texto: "(Comentario nuevo #" + (i + 1) + ")" });
-  // });
+   //ratings.forEach((r, i) => {
+    //todos.push({ rating: r, texto: "(Comentario nuevo #" + (i + 1) + ")" });
+   //});
 
   todos.reverse().forEach((c) => {
     const estrellas = Array.from({ length: 5 }, (_, i) => {
