@@ -3,36 +3,78 @@
     {
       "id": 1,
       "nombre": "God Of War (PS2)",
-      "precio": 25.99,
+      "precio": 25000,
       "categoria": "Play Station",
       "stock": 10,
       "descripcion": "Juego de acción y aventura para PlayStation 2.",
       "imagenes": [
         "img/God Of War.jpg",
         "img/GodofWar2.jpg"
+      ],
+      "entrega": "Disponible en tienda online y física",
+      "envio": "No disponible",
+      "reseñas": [
+        {
+          "usuario": "Charli",
+          "comentario": "Increíble juego.",
+          "puntuacion": 5
+        },
+        {
+          "usuario": "Luis",
+          "comentario": "Me traje recuerdos de mi niñez.",
+          "puntuacion": 4
+        }
       ]
     },
     {
       "id": 2,
       "nombre": "Forza Horizon 5",
-      "precio": 59.99,
+      "precio": 46500,
       "categoria": "Xbox",
       "stock": 15,
       "descripcion": "Juego de carreras en mundo abierto para Xbox y PC.",
       "imagenes": [
         "img/Forza.jpg",
         "img/forza2.jpg"
+      ],
+      "entrega": "Disponible para recoger en tienda",
+      "envio": "No disponible",
+      "reseñas": [
+        {
+          "usuario": "Julio",
+          "comentario": "Me esperaba más de esta entrega.",
+          "puntuacion": 3
+        },
+        {
+          "usuario": "Gerardo",
+          "comentario": "Dado lo que promete, lo recomiendo.",
+          "puntuacion": 4
+        }
       ]
     },
     {
       "id": 3,
       "nombre": "Halo: Combat Evolved",
-      "precio": 19.99,
+      "precio": 55000,
       "categoria": "Xbox",
       "stock": 8,
       "descripcion": "Shooter clásico en primera persona para Xbox.",
       "imagenes": [
         "img/Halo CE.jpg"
+      ],
+      "entrega": "Disponible para recoger en tienda",
+      "envio": "No disponible",
+      "reseñas": [
+        {
+          "usuario": "Laura",
+          "comentario": "Muchos recuerdos de mi infancia jugandolo en mi xbox360.",
+          "puntuacion": 5
+        },
+        {
+          "usuario": "Luis",
+          "comentario": "Juegazo!!.",
+          "puntuacion": 5
+        }
       ]
     }
   ],
@@ -48,6 +90,20 @@
       "imagenes": [
         "img/PS2.jpg",
         "img/PS2 2.jpg"
+      ],
+      "entrega": "Disponible para recoger en tienda",
+      "envio": "No disponible",
+      "reseñas": [
+        {
+          "usuario": "Sofía",
+          "comentario": "Se ve increíble en mi pared.",
+          "puntuacion": 5
+        },
+        {
+          "usuario": "Luis",
+          "comentario": "La impresión es buena, pero esperaba un marco.",
+          "puntuacion": 4
+        }
       ]
     },
     {
@@ -59,6 +115,20 @@
       "descripcion": "La consola más potente de Microsoft con soporte para juegos en 4K y alta velocidad.",
       "imagenes": [
         "img/psvita.jpg"
+      ],
+      "entrega": "Disponible para recoger en tienda",
+      "envio": "No disponible",
+      "reseñas": [
+        {
+          "usuario": "Sofía",
+          "comentario": "Se ve increíble en mi pared.",
+          "puntuacion": 5
+        },
+        {
+          "usuario": "Luis",
+          "comentario": "La impresión es buena, pero esperaba un marco.",
+          "puntuacion": 4
+        }
       ]
     },
     {
@@ -70,6 +140,20 @@
       "descripcion": "Consola híbrida que puedes usar como portátil o conectada a la TV.",
       "imagenes": [
         "img/ds.jpg"
+      ],
+      "entrega": "Disponible para recoger en tienda",
+      "envio": "No disponible",
+      "reseñas": [
+        {
+          "usuario": "Sofía",
+          "comentario": "Se ve increíble en mi pared.",
+          "puntuacion": 5
+        },
+        {
+          "usuario": "Luis",
+          "comentario": "La impresión es buena, pero esperaba un marco.",
+          "puntuacion": 4
+        }
       ]
     }
   ],
@@ -84,6 +168,20 @@
       "descripcion": "Control inalámbrico para Xbox con diseño ergonómico y conectividad Bluetooth.",
       "imagenes": [
         "img/control ps5.png"
+      ],
+      "entrega": "Disponible para recoger en tienda",
+      "envio": "No disponible",
+      "reseñas": [
+        {
+          "usuario": "Sofía",
+          "comentario": "Se ve increíble en mi pared.",
+          "puntuacion": 5
+        },
+        {
+          "usuario": "Luis",
+          "comentario": "La impresión es buena, pero esperaba un marco.",
+          "puntuacion": 4
+        }
       ]
     },
     {
@@ -95,6 +193,20 @@
       "descripcion": "Auriculares con sonido envolvente y micrófono ajustable para una experiencia de juego inmersiva.",
       "imagenes": [
         "img/astro.png"
+      ],
+      "entrega": "Disponible para recoger en tienda",
+      "envio": "No disponible",
+      "reseñas": [
+        {
+          "usuario": "Sofía",
+          "comentario": "Se ve increíble en mi pared.",
+          "puntuacion": 5
+        },
+        {
+          "usuario": "Luis",
+          "comentario": "La impresión es buena, pero esperaba un marco.",
+          "puntuacion": 4
+        }
       ]
     },
     {
@@ -106,6 +218,20 @@
       "descripcion": "Teclado mecánico con switches de alta calidad para gamers.",
       "imagenes": [
         "img/teclado.png"
+      ],
+      "entrega": "Disponible para recoger en tienda",
+      "envio": "No disponible",
+      "reseñas": [
+        {
+          "usuario": "Sofía",
+          "comentario": "Se ve increíble en mi pared.",
+          "puntuacion": 5
+        },
+        {
+          "usuario": "Luis",
+          "comentario": "La impresión es buena, pero esperaba un marco.",
+          "puntuacion": 4
+        }
       ]
     }
   ]
