@@ -6,12 +6,6 @@ const promedioDiv = document.createElement("div");
 const comentariosDiv = document.getElementById("comentarios");
 
 const ratings = []; // Solo calificaciones numéricas
-const comentarios = [
-  // Comentarios precargados
-  { rating: 5, texto: "Excelente producto, muy satisfecho." },
-  { rating: 4, texto: "Funciona bien, aunque esperaba más." },
-  { rating: 2, texto: "No me gustó mucho, esperaba más calidad dado su precio." },
-];
 
 // Insertar bloque de promedio encima del formulario
 const ratingSection = document.querySelector('#ratingForm').parentElement;
@@ -71,7 +65,7 @@ function renderizarComentarios() {
         i < c.rating ? "gold" : "lightgray"
       };">★</span>`;
     }).join("");
-    html += `<div style="margin-bottom:10px; background:#f9f9f9; padding:10px; border-radius:5px;">
+    html += `<div style="margin-bottom:10px; background:#6c4fb8; padding:10px; border-radius:5px;">
         <div>${estrellas}</div>
         <div style="margin-top:5px;">${c.texto}</div>
       </div>`;
