@@ -6,38 +6,61 @@
   <title>Contacto | Bit By Bit</title>
   <link rel="stylesheet" href="estilo.css" />
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+  <style>
+    .form-grid { display: grid; gap: 1rem; }
+    .form-item { display: flex; flex-direction: column; }
+    label { font-weight: bold; margin-bottom: 0.3rem; }
+    input, select, textarea {
+      padding: 0.5rem; border-radius: 6px; border: 1px solid #ccc;
+      font-family: var(--font-base, Arial);
+    }
+    .error { color: red; font-size: 0.8rem; display: none; }
+    .error.visible { display: block; }
+    .mensaje-confirmacion {
+      margin-top: 1rem; padding: 1rem;
+      border-radius: 8px; background: rgba(57,255,20,0.12);
+      border: 1px solid rgba(57,255,20,0.12); display: none;
+    }
+    #resumenDatos { margin-top: 1rem; border:1px solid #ccc; padding:1rem; border-radius:8px; display:none; background:#5c449e; }
+    #resumenDatos h3 { margin-top:0; }
+    /* Estilo mapa */
+    #map { height: 300px; margin-top: 1rem; border-radius: 8px; }
+  </style>
+
+  <!-- reCAPTCHA v2 -->
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
 
   <!-- Header -->
-    <header class="site-header">
-  <div class="container header-content">
-    <!-- Botón hamburguesa -->
-    <input type="checkbox" id="menu-toggle" class="menu-toggle" />
-    <label for="menu-toggle" class="menu-icon">&#9776;</label>
+  <header class="site-header">
+    <div class="container header-content">
+      <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+      <label for="menu-toggle" class="menu-icon">&#9776;</label>
 
-    <a href="index.html" class="logo">
-      <img src="img/Logo_2.png" alt="Bit By Bit logo" />
-    </a>
+      <a href="index.html" class="logo">
+        <img src="img/Logo_2.png" alt="Bit By Bit logo" />
+      </a>
 
-    <!-- Menú combinado -->
-    <nav class="responsive-nav">
-      <ul>
-        <li><a href="index.html">Inicio</a></li>
-        <li><a href="#">Juegos</a></li>
-        <li><a href="#">Periféricos</a></li>
-        <li><a href="coleccionables.html">Coleccionables</a></li>
-        <li><a href="blog.html">Blog</a></li>
-        <li><a href="Acerca de.html">Acerca de</a></li>
-      </ul>
-    </nav>
-  </div>
-   <div class = "container site-description">
-    <p>
-      ¿Tienes dudas o sugerencias? ¡Escribenos!
-    </p>
-  </div>
-</header>
+      <nav class="responsive-nav">
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="#">Juegos</a></li>
+          <li><a href="#">Periféricos</a></li>
+          <li><a href="coleccionables.html">Coleccionables</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="Acerca de.html">Acerca de</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="container site-description">
+      <p>¿Tienes dudas o sugerencias? ¡Escríbenos!</p>
+    </div>
+  </header>
 
   <main class="container">
     <!-- Datos de contacto -->
@@ -46,32 +69,49 @@
       <p><strong>Teléfono:</strong> +506 8888-0000</p>
       <p><strong>Dirección:</strong> Alajuela, Costa Rica</p>
       <p><strong>Horario de atención:</strong> Lunes a Sábado – 8:00 am a 6:00 pm</p>
+      <div id="map"></div>
     </section>
 
-    <!-- Formulario-->
+    <!-- Formulario de contacto -->
     <section class="formulario-contacto">
       <h2>Formulario de Contacto</h2>
-      <form action="#confirmacion">
+
+      <form id="formContacto" novalidate>
         <div class="form-grid">
 
+          <!-- Nombre -->
           <div class="form-item">
             <label for="nombre">Nombre completo:</label>
-            <input type="text" id="nombre" name="nombre" required>
-            <span class="error">Por favor ingresa tu nombre.</span>
+            <input type="text" id="nombre" name="nombre" required minlength="2" maxlength="60" />
+            <span class="error">Por favor ingresa un nombre válido.</span>
           </div>
 
+          <!-- Correo -->
           <div class="form-item">
             <label for="correo">Correo electrónico:</label>
-            <input type="email" id="correo" name="correo" required>
+            <input type="email" id="correo" name="correo" required />
             <span class="error">Introduce un email válido.</span>
           </div>
 
+          <!-- Fecha de nacimiento -->
           <div class="form-item">
-            <label for="telefono">Teléfono (8888-8888):</label>
-            <input type="tel" id="telefono" name="telefono" pattern="^\d{4}-\d{4}$" required>
-            <span class="error">Formato requerido: 8888-8888.</span>
+            <label for="fechaNac">Fecha de nacimiento:</label>
+            <input type="date" id="fechaNac" name="fechaNac" required />
+            <span class="error">Selecciona una fecha válida.</span>
           </div>
 
+          <!-- Género -->
+          <div class="form-item">
+            <label>Género:</label>
+            <div>
+              <label><input type="radio" name="genero" value="Masculino" required /> Masculino</label>
+              <label><input type="radio" name="genero" value="Femenino" /> Femenino</label>
+              <label><input type="radio" name="genero" value="Otro" /> Otro</label>
+            </div>
+            <span class="error">Selecciona un género.</span>
+          </div>
+
+          <!-- Motivo -->
           <div class="form-item">
             <label for="motivo">Motivo del contacto:</label>
             <select id="motivo" name="motivo" required>
@@ -83,18 +123,24 @@
             <span class="error">Selecciona un motivo.</span>
           </div>
 
+          <!-- Número de pedido -->
           <div class="form-item">
-            <label>¿Prefiere ser contactado por?:</label>
-            <div class="radio-group">
-              <label><input type="radio" name="preferencia" value="email" checked> Correo</label>
-              <label><input type="radio" name="preferencia" value="telefono"> Teléfono</label>
-            </div>
+            <label for="pedido">Número de pedido:</label>
+            <input type="text" id="pedido" name="pedido" pattern="^\d{4,10}$" placeholder="Ej: 123456" />
+            <span class="error">Debe ser un número de 4 a 10 dígitos.</span>
           </div>
 
+          <!-- Mensaje -->
           <div class="form-item">
             <label for="mensaje">Mensaje:</label>
             <textarea id="mensaje" name="mensaje" rows="4" required></textarea>
             <span class="error">El mensaje no puede quedar vacío.</span>
+          </div>
+
+          <!-- reCAPTCHA -->
+          <div class="form-item">
+            <div class="g-recaptcha" data-sitekey="6LcjbZkrAAAAAGQvLpb1FBlMSUfIAozGsNlMJIUU"></div>
+            <span class="error" id="captchaError">Confirma que no eres un robot.</span>
           </div>
 
         </div>
@@ -108,10 +154,16 @@
       <div id="confirmacion" class="mensaje-confirmacion">
         <p>✅ ¡Gracias por contactarnos! Tu mensaje fue enviado correctamente.</p>
       </div>
+
+      <!-- Resumen de datos -->
+      <div id="resumenDatos">
+        <h3>Resumen de datos enviados</h3>
+        <ul id="resumenLista"></ul>
+      </div>
     </section>
   </main>
 
-  <!-- Footer-->
+  <!-- Footer -->
   <footer class="site-footer">
     <div class="container footer-content">
       <a href="#"><img src="img/Instagram.png" alt="Instagram" /></a>
@@ -121,19 +173,66 @@
     </div>
   </footer>
 
-  <!-- Hecho con JavaScript -->
-  <!-- Script: inserta automáticamente un guión en el campo Teléfono tras los primeros 4 dígitos -->
-<script>
-  document.getElementById('telefono').addEventListener('input', function() {
-    // 1) Eliminar todo lo que no sea dígito y quedarnos con los primeros 8 caracteres
-    let v = this.value.replace(/\D/g, '').slice(0, 8);
-    // 2) Si ya hay más de 4, insertar el guión entre los bloques de 4 dígitos
-    if (v.length > 4) {
-      v = v.slice(0, 4) + '-' + v.slice(4);
-    }
-    // 3) Actualizar el valor del campo
-    this.value = v;
-  });
-</script>
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <!-- Script validaciones -->
+  <script>
+    // Inicializar mapa Leaflet
+    const map = L.map('map').setView([10.01625, -84.21163], 13); // Coordenadas de Alajuela
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    L.marker([10.01625, -84.21163]).addTo(map)
+      .bindPopup("📍 Bit By Bit - Alajuela, Costa Rica")
+      .openPopup();
+
+    const form = document.getElementById('formContacto');
+    const resumen = document.getElementById('resumenDatos');
+    const lista = document.getElementById('resumenLista');
+    const confirmacion = document.getElementById('confirmacion');
+    const captchaError = document.getElementById('captchaError');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      let valido = true;
+
+      // Validaciones normales
+      form.querySelectorAll('input, select, textarea').forEach(campo => {
+        const error = campo.parentElement.querySelector('.error');
+        if (!campo.checkValidity()) {
+          valido = false;
+          if (error) error.classList.add('visible');
+        } else {
+          if (error) error.classList.remove('visible');
+        }
+      });
+
+      // Validar reCAPTCHA
+      const captchaResponse = grecaptcha.getResponse();
+      if (!captchaResponse) {
+        captchaError.classList.add('visible');
+        valido = false;
+      } else {
+        captchaError.classList.remove('visible');
+      }
+
+      if (!valido) return;
+
+      // Mostrar confirmación y resumen
+      confirmacion.style.display = 'block';
+      resumen.style.display = 'block';
+
+      lista.innerHTML = `
+        <li><strong>Nombre:</strong> ${form.nombre.value}</li>
+        <li><strong>Correo:</strong> ${form.correo.value}</li>
+        <li><strong>Fecha de nacimiento:</strong> ${form.fechaNac.value}</li>
+        <li><strong>Género:</strong> ${form.genero.value}</li>
+        <li><strong>Motivo:</strong> ${form.motivo.value}</li>
+        <li><strong>Número de pedido:</strong> ${form.pedido.value}</li>
+        <li><strong>Mensaje:</strong> ${form.mensaje.value}</li>
+      `;
+    });
+  </script>
 </body>
 </html>
