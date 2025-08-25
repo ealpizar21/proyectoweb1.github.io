@@ -1,5 +1,5 @@
 {
-    "juegos": [
+  "juegos": [
     {
       "id": 1,
       "nombre": "God Of War (PS2)",
@@ -7,10 +7,7 @@
       "categoria": "Play Station",
       "stock": 10,
       "descripcion": "Juego de acción y aventura para PlayStation 2.",
-      "imagenes": [
-        "img/God Of War.jpg",
-        "img/GodofWar2.jpg"
-      ],
+      "imagenes": ["img/God Of War.jpg", "img/GodofWar2.jpg"],
       "entrega": "Disponible en tienda online y física",
       "envio": "No disponible",
       "reseñas": [
@@ -21,7 +18,7 @@
         },
         {
           "usuario": "Luis",
-          "comentario": "Me traje recuerdos de mi niñez.",
+          "comentario": "Me trajo recuerdos de mi niñez.",
           "puntuacion": 4
         }
       ]
@@ -33,10 +30,7 @@
       "categoria": "Xbox",
       "stock": 15,
       "descripcion": "Juego de carreras en mundo abierto para Xbox y PC.",
-      "imagenes": [
-        "img/Forza.jpg",
-        "img/forza2.jpg"
-      ],
+      "imagenes": ["img/Forza.jpg", "img/forza2.jpg"],
       "entrega": "Disponible para recoger en tienda",
       "envio": "No disponible",
       "reseñas": [
@@ -59,9 +53,7 @@
       "categoria": "Xbox",
       "stock": 8,
       "descripcion": "Shooter clásico en primera persona para Xbox.",
-      "imagenes": [
-        "img/Halo CE.jpg"
-      ],
+      "imagenes": ["img/Halo CE.jpg"],
       "entrega": "Disponible para recoger en tienda",
       "envio": "No disponible",
       "reseñas": [
@@ -78,44 +70,38 @@
       ]
     }
   ],
-  "consolas": 
-  [
+  "consolas": [
     {
       "id": 1,
       "nombre": "PlayStation 2",
-      "precio": 499.99,
+      "precio": 93.5,
       "categoria": "Play Station",
       "stock": 5,
-      "descripcion": "La última consola de Sony con gráficos de próxima generación y tiempos de carga ultrarrápidos.",
-      "imagenes": [
-        "img/PS2.jpg",
-        "img/PS2 2.jpg"
-      ],
+      "descripcion": "PlayStation 2 es la segunda consola de sobremesa de Sony, lanzada en el año 2000. Con gráficos mejorados y tiempos de carga más rápidos que su predecesora, se convirtió en un ícono de la era de los videojuegos. Compatible con una amplia biblioteca de títulos clásicos de acción, aventura, deportes y carreras, la PS2 es conocida por su durabilidad, su lector de DVD incorporado y la posibilidad de jugar juegos de la primera PlayStation. Ideal para coleccionistas y jugadores que desean revivir la nostalgia de los videojuegos de principios de los 2000.",
+      "imagenes": ["img/PS2.jpg", "img/PS2 2.jpg"],
       "entrega": "Disponible para recoger en tienda",
       "envio": "No disponible",
       "reseñas": [
         {
-          "usuario": "Sofía",
-          "comentario": "Se ve increíble en mi pared.",
+          "usuario": "Carlos",
+          "comentario": "Muy buena consola.",
           "puntuacion": 5
         },
         {
           "usuario": "Luis",
-          "comentario": "La impresión es buena, pero esperaba un marco.",
-          "puntuacion": 4
+          "comentario": "PS2 simpre la mejor.",
+          "puntuacion": 5
         }
       ]
     },
     {
       "id": 2,
       "nombre": "PS VITA",
-      "precio": 499.99,
+      "precio": 90000,
       "categoria": "Play Station",
       "stock": 7,
-      "descripcion": "La consola más potente de Microsoft con soporte para juegos en 4K y alta velocidad.",
-      "imagenes": [
-        "img/psvita.jpg"
-      ],
+      "descripcion": "La PS Vita es la portátil de Sony que combina potencia y portabilidad. Con una pantalla OLED de 5 pulgadas, controles precisos y un catálogo que incluye joyas como Uncharted: Golden Abyss, Persona 4 Golden y Gravity Rush, ofrece una experiencia inmersiva en cualquier lugar. Su conectividad Wi-Fi y compatibilidad con algunos títulos de PS4 mediante Remote Play la hacen una consola versátil y muy valorada por coleccionistas y jugadores que buscan calidad en juegos portátiles..",
+      "imagenes": ["img/psvita.jpg"],
       "entrega": "Disponible para recoger en tienda",
       "envio": "No disponible",
       "reseñas": [
@@ -134,13 +120,11 @@
     {
       "id": 3,
       "nombre": "Nintendo 3Ds",
-      "precio": 299.99,
+      "precio": 70000,
       "categoria": "Nintendo",
       "stock": 12,
-      "descripcion": "Consola híbrida que puedes usar como portátil o conectada a la TV.",
-      "imagenes": [
-        "img/ds.jpg"
-      ],
+      "descripcion": "La Nintendo 3DS revolucionó el juego portátil con su pantalla capaz de mostrar gráficos en 3D sin gafas. Con títulos icónicos como Pokémon X/Y, The Legend of Zelda: Ocarina of Time 3D y Super Mario 3D Land, ofrece una experiencia única tanto para jugadores casuales como para los más dedicados. Además, su retrocompatibilidad con juegos de Nintendo DS y su catálogo lleno de exclusivas la convierten en una de las consolas portátiles más completas y queridas de Nintendo..",
+      "imagenes": ["img/ds.jpg"],
       "entrega": "Disponible para recoger en tienda",
       "envio": "No disponible",
       "reseñas": [
@@ -157,8 +141,7 @@
       ]
     }
   ],
-  "perifericos": 
-  [
+  "perifericos": [
     {
       "id": 1,
       "nombre": "Control Inalámbrico PS%",
@@ -166,9 +149,7 @@
       "categoria": "Play Station",
       "stock": 20,
       "descripcion": "Control inalámbrico para Xbox con diseño ergonómico y conectividad Bluetooth.",
-      "imagenes": [
-        "img/control ps5.png"
-      ],
+      "imagenes": ["img/control ps5.png"],
       "entrega": "Disponible para recoger en tienda",
       "envio": "No disponible",
       "reseñas": [
@@ -191,9 +172,7 @@
       "categoria": "Auriculares",
       "stock": 15,
       "descripcion": "Auriculares con sonido envolvente y micrófono ajustable para una experiencia de juego inmersiva.",
-      "imagenes": [
-        "img/astro.png"
-      ],
+      "imagenes": ["img/astro.png"],
       "entrega": "Disponible para recoger en tienda",
       "envio": "No disponible",
       "reseñas": [
@@ -216,9 +195,7 @@
       "categoria": "Teclados",
       "stock": 10,
       "descripcion": "Teclado mecánico con switches de alta calidad para gamers.",
-      "imagenes": [
-        "img/teclado.png"
-      ],
+      "imagenes": ["img/teclado.png"],
       "entrega": "Disponible para recoger en tienda",
       "envio": "No disponible",
       "reseñas": [

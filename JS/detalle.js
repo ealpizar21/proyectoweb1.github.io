@@ -4,7 +4,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const id = parseInt(params.get("id"));
 
   if (!tipo || !id) {
-    document.getElementById("detalleProducto").innerHTML = "<p>Error: no se encontró el producto.</p>";
+    document.getElementById("detalleProducto").innerHTML =
+      "<p>Error: no se encontró el producto.</p>";
     return;
   }
 
@@ -12,10 +13,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const response = await fetch("Productos2.json");
     const data = await response.json();
     const categoria = data[tipo];
-    const producto = categoria.find(item => item.id === id);
+    const producto = categoria.find((item) => item.id === id);
 
     if (!producto) {
-      document.getElementById("detalleProducto").innerHTML = "<p>Producto no encontrado.</p>";
+      document.getElementById("detalleProducto").innerHTML =
+        "<p>Producto no encontrado.</p>";
       return;
     }
 
@@ -23,7 +25,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     detalleDiv.innerHTML = `
       <div class="detalle-grid">
         <div class="galeria">
-          ${producto.imagenes.map(img => `<img src="${img}" alt="${producto.nombre}" class="thumb">`).join("")}
+          ${producto.imagenes
+            .map(
+              (img) =>
+                `<img src="${img}" alt="${producto.nombre}" class="thumb">`
+            )
+            .join("")}
         </div>
         <div class="detalle-info">
           <h2>${producto.nombre}</h2>
@@ -64,13 +71,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     const lbImg = document.getElementById("lbImg");
     const lbClose = document.getElementById("lbClose");
 
-    document.querySelectorAll(".thumb").forEach(img => {
+    document.querySelectorAll(".thumb").forEach((img) => {
       img.addEventListener("click", () => {
         lbImg.src = img.src;
         lightbox.style.display = "flex";
       });
     });
-    lbClose?.addEventListener("click", () => lightbox.style.display = "none");
+    lbClose?.addEventListener("click", () => (lightbox.style.display = "none"));
 
     // ---------------------------
     // Comentarios y promedio
@@ -80,7 +87,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     const comentariosDiv = document.getElementById("comentarios");
     const promedioDiv = document.createElement("div");
     let ratingSeleccionado = 0;
-    const comentarios = producto.reseñas ? [...producto.reseñas.map(r => ({ rating: r.puntuacion, texto: r.comentario }))] : [];
+    const comentarios = producto.reseñas
+      ? [
+          ...producto.reseñas.map((r) => ({
+            rating: r.puntuacion,
+            texto: r.comentario,
+          })),
+        ]
+      : [];
 
     // Insertar promedio encima del formulario
     form.parentElement.insertBefore(promedioDiv, form);
@@ -94,33 +108,52 @@ document.addEventListener("DOMContentLoaded", async () => {
     function mostrarPromedio() {
       const promedio = calcularPromedio();
       const estrellasLlenas = Math.floor(promedio);
-      const estrellasHtml = Array.from({ length: 5 }, (_, i) =>
-        `<span style="color: ${i < estrellasLlenas ? "gold" : "lightgray"}; font-size: 22px;">★</span>`).join("");
+      const estrellasHtml = Array.from(
+        { length: 5 },
+        (_, i) =>
+          `<span style="color: ${
+            i < estrellasLlenas ? "gold" : "lightgray"
+          }; font-size: 22px;">★</span>`
+      ).join("");
       promedioDiv.innerHTML = `
         <h3>Promedio de calificación</h3>
         <div style="margin-bottom:10px;">
-          ${estrellasHtml} <span style="font-weight:bold;">${promedio.toFixed(1)} / 5</span>
-          <br><small>(${comentarios.length} valoración${comentarios.length === 1 ? "" : "es"})</small>
+          ${estrellasHtml} <span style="font-weight:bold;">${promedio.toFixed(
+        1
+      )} / 5</span>
+          <br><small>(${comentarios.length} valoración${
+        comentarios.length === 1 ? "" : "es"
+      })</small>
         </div>`;
     }
 
     function renderizarComentarios() {
       comentariosDiv.innerHTML = "";
-      comentarios.slice().reverse().forEach(c => {
-        const estrellas = Array.from({ length: 5 }, (_, i) =>
-          `<span style="color: ${i < c.rating ? "gold" : "lightgray"};">★</span>`).join("");
-        comentariosDiv.innerHTML += `
+      comentarios
+        .slice()
+        .reverse()
+        .forEach((c) => {
+          const estrellas = Array.from(
+            { length: 5 },
+            (_, i) =>
+              `<span style="color: ${
+                i < c.rating ? "gold" : "lightgray"
+              };">★</span>`
+          ).join("");
+          comentariosDiv.innerHTML += `
           <div style="margin-bottom:10px; background:#6c4fb8; padding:10px; border-radius:5px; color:white;">
             <div>${estrellas}</div>
             <div style="margin-top:5px;">${c.texto}</div>
           </div>`;
-      });
+        });
     }
 
     // ---------------------------
     // Estrellas horizontales
     // ---------------------------
-    const estrellasElems = document.querySelectorAll("#estrellasForm .estrella");
+    const estrellasElems = document.querySelectorAll(
+      "#estrellasForm .estrella"
+    );
     estrellasElems.forEach((estrella) => {
       estrella.style.cursor = "pointer";
       estrella.style.fontSize = "22px";
@@ -128,16 +161,24 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       estrella.addEventListener("mouseover", () => {
         const val = parseInt(estrella.dataset.value);
-        estrellasElems.forEach((e, i) => e.style.color = i < val ? "gold" : "lightgray");
+        estrellasElems.forEach(
+          (e, i) => (e.style.color = i < val ? "gold" : "lightgray")
+        );
       });
 
       estrella.addEventListener("mouseout", () => {
-        estrellasElems.forEach((e, i) => e.style.color = i < ratingSeleccionado ? "gold" : "lightgray");
+        estrellasElems.forEach(
+          (e, i) =>
+            (e.style.color = i < ratingSeleccionado ? "gold" : "lightgray")
+        );
       });
 
       estrella.addEventListener("click", () => {
         ratingSeleccionado = parseInt(estrella.dataset.value);
-        estrellasElems.forEach((e, i) => e.style.color = i < ratingSeleccionado ? "gold" : "lightgray");
+        estrellasElems.forEach(
+          (e, i) =>
+            (e.style.color = i < ratingSeleccionado ? "gold" : "lightgray")
+        );
       });
     });
 
@@ -147,8 +188,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       const comentario = form.comentario.value.trim();
-      if (ratingSeleccionado === 0) { alert("Selecciona una calificación."); return; }
-      if (!comentario) { alert("Escribe un comentario."); return; }
+      if (ratingSeleccionado === 0) {
+        alert("Selecciona una calificación.");
+        return;
+      }
+      if (!comentario) {
+        alert("Escribe un comentario.");
+        return;
+      }
 
       comentarios.unshift({ rating: ratingSeleccionado, texto: comentario });
       resultado.innerHTML = `<strong>¡Gracias por tu valoración!</strong><br>
@@ -156,7 +203,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         Comentario: "${comentario}"`;
       form.reset();
       ratingSeleccionado = 0;
-      estrellasElems.forEach(e => e.style.color = "lightgray");
+      estrellasElems.forEach((e) => (e.style.color = "lightgray"));
       mostrarPromedio();
       renderizarComentarios();
     });
@@ -165,23 +212,33 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Productos relacionados
     // ---------------------------
     const relacionadosDiv = document.getElementById("relacionados");
-    const relacionados = categoria.filter(p => p.id !== producto.id).slice(0, 4);
-    relacionados.forEach(p => {
+    const relacionados = categoria
+      .filter((p) => p.id !== producto.id)
+      .slice(0, 4);
+    relacionados.forEach((p) => {
       relacionadosDiv.innerHTML += `
-        <div class="card">
-          <img src="${p.imagenes[0] || ''}" alt="${p.nombre}" style="width:100px; height:auto;">
+        <div class="producto-card">
+         <div class="card">
+         <div class="card-image">
+          <img src="${p.imagenes[0] || ""}" alt="${
+        p.nombre
+      }" style="width:100px; height:auto;">
           <p>${p.nombre}</p>
           <p>$${p.precio}</p>
-          <a href="detalle.html?tipo=${tipo}&id=${p.id}; style=color:white;">Ver detalle</a>
+          <div class = "back-link"><a href="detalle.html?tipo=${tipo}&id=${
+        p.id
+      }; style=color:white;">Ver detalle</a></div>
+        </div>
+        </div>
         </div>
       `;
     });
 
     mostrarPromedio();
     renderizarComentarios();
-
   } catch (err) {
     console.error("Error cargando datos:", err);
-    document.getElementById("detalleProducto").innerHTML = "<p>Error al cargar los datos.</p>";
+    document.getElementById("detalleProducto").innerHTML =
+      "<p>Error al cargar los datos.</p>";
   }
 });
