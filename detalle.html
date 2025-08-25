@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Detalle</title>
+  <title>Detalle - Producto</title>
   <link rel="stylesheet" href="estilo.css">
   <style>
     .galeria img { width: 180px; height: auto; margin-right:0.5rem; border-radius:6px; border:2px solid var(--accent-green); cursor:pointer; }
@@ -12,86 +12,91 @@
     .galeria { display:flex; gap:0.5rem; flex-wrap:wrap; margin:0.5rem 0 1rem 0; }
     .estrella { color: var(--accent-green); font-size:1.1rem; margin-right:2px;}
     .reseña { background: var(--purple-light); padding:0.75rem; border-left:4px solid var(--accent-green); border-radius:6px; margin-bottom:0.6rem; }
+    .back-link { text-align:center; margin-top:1.25rem; }
+    .back-link a { color:var(--accent-green); text-decoration:none; border-bottom:1px dashed var(--accent-green); }
+    @media (max-width:720px) {
+      .detalle-grid { flex-direction:column; }
+      .galeria img { width: 120px; }
+    }
   </style>
 </head>
 <body>
-<header class="site-header">
-  <div class="container header-content">
-    <input type="checkbox" id="menu-toggle" class="menu-toggle" />
-    <label for="menu-toggle" class="menu-icon">&#9776;</label>
+  <header class="site-header">
+    <div class="container header-content">
+      <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+      <label for="menu-toggle" class="menu-icon" aria-hidden="true">&#9776;</label>
 
-    <a href="index.html" class="logo" aria-label="Ir al inicio">
-      <img src="img/Logo_2.png" alt="Bit By Bit logo" />
-    </a>
+      <a href="index.html" class="logo" aria-label="Ir al inicio">
+        <img src="img/Logo_2.png" alt="Bit By Bit logo" />
+      </a>
 
-    <nav class="responsive-nav" aria-label="Menú principal">
-      <ul>
-        <li><a href="index.html">Inicio</a></li>
-        <li><a href="Consolas.html">Consolas</a></li>
-        <li><a href="Juegos.html">Juegos</a></li>
-        <li><a href="Perifericos.html">Periféricos</a></li>
-        <li><a href="coleccionables.html">Coleccionables</a></li>
-        <li><a href="PregFrec.html">Preguntas Frecuentes</a></li>
-        <li><a href="blog.html">Blog</a></li>
-        <li><a href="Acerca de.html">Acerca de</a></li>
-      </ul>
-    </nav>
+      <nav class="responsive-nav" aria-label="Menú principal">
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="Consolas.html">Consolas</a></li>
+          <li><a href="Juegos.html">Juegos</a></li>
+          <li><a href="Perifericos.html">Periféricos</a></li>
+          <li><a href="coleccionables.html">Coleccionables</a></li>
+          <li><a href="PregFrec.html">Preguntas Frecuentes</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="Acerca de.html">Acerca de</a></li>
+        </ul>
+      </nav>
+
+      <div id="cartWidget" class="cart-widget" aria-live="polite">
+        <a href="carrito.html" class="cart-widget__link" aria-label="Ver carrito de compras">
+          <svg class="cart-widget__icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M7 4h-2l-1 2H2v2h1l3.6 7.59-1.35 2.44A1 1 0 0 0 5.99 19H19v-2H6.42c.03 0 .06-.01.09-.03l1.1-1.98H18a1 1 0 0 0 .92-.62l3-7A1 1 0 0 0 21 6H6.21l-.94-2zM7 20a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
+          </svg>
+          <span id="cartCount" class="cart-widget__badge">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="detalleProducto"></div>
+    <div class="back-link"><a href="index.html">← Volver al catálogo</a></div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <a href="https://www.instagram.com" aria-label="Instagram">
+        <img src="img/Instagram.png" alt="Instagram" />
+      </a>
+      <span>Bit By Bit</span>
+      <a href="https://www.facebook.com/?locale=es_LA" aria-label="Facebook">
+        <img src="img/Facebook.png" alt="Facebook" />
+      </a>
+      <span>Bit By Bit</span>
+    </div>
+  </footer>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Vista ampliada de imagen">
+    <button class="lb-close" aria-label="Cerrar" id="lbClose">Cerrar</button>
+    <img src="" alt="Imagen ampliada" class="lb-img" id="lbImg">
   </div>
-</header>
 
-<main class="container">
-  <div id="detalleProducto"></div>
-  <section class="container">
-          <h2>Valoración</h2>
-          <form id="ratingForm">
-            <div class="stars">
-              <input type="radio" name="rating" id="star5" value="5" />
-              <label for="star5">★</label>
-              <input type="radio" name="rating" id="star4" value="4" />
-              <label for="star4">★</label>
-              <input type="radio" name="rating" id="star3" value="3" />
-              <label for="star3">★</label>
-              <input type="radio" name="rating" id="star2" value="2" />
-              <label for="star2">★</label>
-              <input type="radio" name="rating" id="star1" value="1" />
-              <label for="star1">★</label>
-            </div>
-            <textarea
-              style="height: 50px"
-              name="Usuario"
-              placeholder="Nombre de usuario"
-            ></textarea>
-            <textarea
-              name="comentario"
-              placeholder="Escribe tu comentario aquí..."
-            ></textarea>
-            <button type="submit">Enviar valoración</button>
-          </form>
-          <div class="resultado" id="resultado"></div>
-          <div id="comentarios">
-            <h3>Comentarios anteriores</h3>
-            <!-- Aquí se cargarán los comentarios automáticamente -->
+  <!-- Modal confirmación agregado al carrito -->
+  <div id="addCartModal" class="modal-confirm" aria-hidden="true" role="dialog" aria-label="Producto agregado al carrito">
+    <div class="modal-confirm__backdrop" tabindex="-1"></div>
+    <div class="modal-confirm__card" role="document" aria-modal="true">
+      <button id="modalClose" class="modal-confirm__close" aria-label="Cerrar modal">✕</button>
+      <div class="modal-confirm__content">
+        <img id="modalProdImg" class="modal-confirm__img" src="img/placeholder.png" alt="Imagen del producto" />
+        <div class="modal-confirm__info">
+          <h3 id="modalProdName">Nombre del producto</h3>
+          <p id="modalProdMsg" class="modal-confirm__msg">Se añadió al carrito correctamente.</p>
+          <div class="modal-confirm__actions">
+            <a href="carrito.html" class="btn-Comprar" role="link">Ir al carrito</a>
+            <button id="modalContinue" class="btn-VM" type="button">Seguir comprando</button>
           </div>
-        </section>
-  <div class="back-link"><a href="javascript:history.back()">← Volver al catálogo</a></div>
-</main>
-
-<footer class="site-footer">
-  <div class="container footer-content">
-    <a href="https://www.instagram.com"><img src="img/Instagram.png" alt="Instagram" /></a>
-    <span>Bit By Bit</span>
-    <a href="https://www.facebook.com"><img src="img/Facebook.png" alt="Facebook" /></a>
-    <span>Bit By Bit</span>
+        </div>
+      </div>
+    </div>
   </div>
-</footer>
 
-<!-- Lightbox -->
-<div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Vista ampliada de imagen">
-  <button class="lb-close" id="lbClose">Cerrar</button>
-  <img src="" alt="Imagen ampliada" class="lb-img" id="lbImg">
-</div>
-
-<script src="JS/detalle.js"></script>
-<script src="JS/Scripts.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

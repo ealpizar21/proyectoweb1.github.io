@@ -1,9 +1,8 @@
-// script.js - completo (enlaces apuntan a detalle_coleccionable.html)
-/* ======================================================
-   Helpers, carga JSON, validación imágenes, catálogo,
-   detalle, reseñas (agregar + eliminar), carrito simulado
-   y animaciones (reveal / tilt / lightbox / ctas)
-   ====================================================== */
+/* script.js
+   Integración catálogo / detalle / carrito / reseñas
+   Requiere: productos.json en la raíz (con coleccionables, consolas, juegos, perifericos)
+   Compatible con: coleccionables.html, Consolas.html, Juegos.html, Perifericos.html, detalle_coleccionable.html
+*/
 
 /* ---------------- Helpers ---------------- */
 function escapeHtml(str) {
@@ -15,17 +14,40 @@ function escapeHtml(str) {
     .replace(/'/g, "&#039;");
 }
 
-/* ---------------- Cargar JSON ---------------- */
+/* ---------------- Cargar JSON (productos.json único) ---------------- */
 async function cargarProductos() {
+  const params = new URLSearchParams(window.location.search);
+  const tipoUrl = params.get("tipo");
+  const tipoGlobal = (window.__tipoPage || "").toString().trim();
+  const tipo = (tipoGlobal || (tipoUrl ? tipoUrl.toString().trim() : "")).toLowerCase();
+
   const res = await fetch("productos.json");
   if (!res.ok) throw new Error("No se pudo cargar productos.json");
   const data = await res.json();
-  return data.coleccionables || [];
+
+  // Normalizar: buscar claves existentes en data
+  if (tipo) {
+    // aceptar keys directas: 'coleccionables', 'consolas', 'juegos', 'perifericos'
+    const posibles = {
+      'coleccionables': 'coleccionables',
+      'consolas': 'consolas',
+      'juegos': 'juegos',
+      'perifericos': 'perifericos',
+      'periféricos': 'perifericos'
+    };
+    const key = posibles[tipo] || tipo;
+    if (data[key] && Array.isArray(data[key])) return data[key];
+  }
+
+  // Si no hay tipo o no existe la colección solicitada -> concatenar todas las listas disponibles
+  const all = [];
+  Object.keys(data).forEach(k => {
+    if (Array.isArray(data[k])) all.push(...data[k]);
+  });
+  return all;
 }
 
-/*  Opcional: validar imágenes y reemplazar por placeholder si faltan.
-    Si no quieres usar placeholder, crea img/placeholder.png en tu carpeta img.
-*/
+/* ---------------- Validar imágenes y fallback ---------------- */
 async function validarYRepararImagenes(productos) {
   const comprobarImg = (src) =>
     new Promise((resolve) => {
@@ -40,107 +62,97 @@ async function validarYRepararImagenes(productos) {
     if (!Array.isArray(p.imagenes)) p.imagenes = [];
     for (let i = 0; i < p.imagenes.length; i++) {
       const ruta = p.imagenes[i];
-      const res = await comprobarImg(ruta);
-      if (!res.ok) {
-        console.warn(
-          `Imagen no encontrada: "${ruta}" — se usará placeholder (img/placeholder.png).`
-        );
+      try {
+        const r = await comprobarImg(ruta);
+        if (!r.ok) {
+          console.warn(`Imagen no encontrada: "${ruta}" — usando placeholder.`);
+          p.imagenes[i] = "img/placeholder.png";
+        }
+      } catch (e) {
         p.imagenes[i] = "img/placeholder.png";
       }
     }
-    // si no tiene imágenes, añade placeholder
     if (p.imagenes.length === 0) p.imagenes.push("img/placeholder.png");
   }
   return productos;
 }
 
-/* ---------------- CATÁLOGO (coleccionables.html) ---------------- */
+/* ---------------- Render catálogo (página con #catalogo) ---------------- */
 if (document.getElementById("catalogo")) {
-  const catalogo = document.getElementById("catalogo");
-  const filtro = document.getElementById("filtroCategoria");
-  const buscar = document.getElementById("buscar");
+  const catalogoEl = document.getElementById("catalogo");
+  const filtroEl = document.getElementById("filtroCategoria");
+  const buscarEl = document.getElementById("buscar");
 
   cargarProductos()
-    .then((productos) => validarYRepararImagenes(productos))
-    .then((productos) => {
-      // guardar cache global para que addToCartById pueda usarla
+    .then(prod => validarYRepararImagenes(prod))
+    .then(productos => {
+      // cache global
       window.__productosCache = productos;
 
       function render(categoria = "todos", termino = "") {
-        catalogo.innerHTML = "";
+        catalogoEl.innerHTML = "";
         const lista = productos
-          .filter((p) => (categoria === "todos" ? true : p.categoria === categoria))
-          .filter((p) => p.nombre.toLowerCase().includes(termino.toLowerCase()));
-        if (lista.length === 0) {
-          catalogo.innerHTML = `<p>No hay productos para mostrar.</p>`;
+          .filter(p => categoria === "todos" ? true : String(p.categoria) === String(categoria))
+          .filter(p => (p.nombre || '').toLowerCase().includes((termino || '').toLowerCase()));
+
+        if (!lista.length) {
+          catalogoEl.innerHTML = `<p>No hay productos para mostrar.</p>`;
           return;
         }
-        lista.forEach((p) => {
-          const wrapper = document.createElement("div");
-          wrapper.className = "producto-card";
-          wrapper.setAttribute('data-id', p.id);
-          wrapper.innerHTML = `
+
+        lista.forEach(p => {
+          const card = document.createElement("div");
+          card.className = "producto-card";
+          card.setAttribute('data-id', p.id);
+          // decidir href de detalle: si la página indicó tipo (window.__tipoPage) usar detalle.html?tipo=...&id=...
+          const tipoPage = (window.__tipoPage || new URLSearchParams(window.location.search).get('tipo') || '').toString();
+          const detalleHref = tipoPage ? `detalle.html?tipo=${encodeURIComponent(tipoPage)}&id=${encodeURIComponent(p.id)}` : `detalle_coleccionable.html?id=${encodeURIComponent(p.id)}`;
+
+          card.innerHTML = `
             <div class="card" tabindex="0">
-              <div class="card-image">
-                <img src="${escapeHtml(p.imagenes[0])}" alt="${escapeHtml(p.nombre)}">
-              </div>
+              <div class="card-image"><img src="${escapeHtml(p.imagenes[0])}" alt="${escapeHtml(p.nombre)}"></div>
               <div class="card-body">
                 <h3>${escapeHtml(p.nombre)}</h3>
                 <p class="precio">₡${Number(p.precio).toFixed(2)}</p>
-                <p class="stock" aria-hidden="true">${escapeHtml(p.stock || "")}</p>
+                <p class="stock" aria-hidden="true">${escapeHtml(p.stock || '')}</p>
               </div>
               <div style="margin-top:8px;">
-                <a class="btn-Comprar" href="detalle_coleccionable.html?id=${p.id}">Ver detalle</a>
-                <button class="btn-VM btn-add-cart" data-id="${p.id}">Añadir al carrito</button>
+                <a class="btn-Comprar" href="${detalleHref}">Ver detalle</a>
+                <button class="btn-VM btn-add-cart" data-id="${escapeHtml(p.id)}">Añadir al carrito</button>
               </div>
             </div>
           `;
-          catalogo.appendChild(wrapper);
+          catalogoEl.appendChild(card);
         });
       }
 
       render();
-
-      filtro.addEventListener("change", () => render(filtro.value, buscar.value));
-      buscar.addEventListener("input", () => render(filtro.value, buscar.value));
+      if (filtroEl) filtroEl.addEventListener('change', () => render(filtroEl.value, buscarEl ? buscarEl.value : ''));
+      if (buscarEl) buscarEl.addEventListener('input', () => render(filtroEl ? filtroEl.value : 'todos', buscarEl.value));
     })
-    .catch((err) => {
-      catalogo.innerHTML = `<p>Error cargando productos: ${escapeHtml(err.message)}</p>`;
+    .catch(err => {
+      catalogoEl.innerHTML = `<p>Error cargando productos: ${escapeHtml(err.message)}</p>`;
       console.error(err);
     });
 }
 
-/* ---------------- DETALLE DE PRODUCTO (detalle_coleccionable.html) ---------------- */
-
-// variable global para el producto activo, usada para re-renderizar después de borrar reseñas
+/* ---------------- DETALLE DE PRODUCTO (página con #detalleProducto) ---------------- */
 let productoActualGlobal = null;
-
-/* keys para localStorage */
-function keySavedResenas(productId) {
-  return `resenas_producto_${productId}`;
-}
-function keyRemovedResenas(productId) {
-  return `resenas_eliminadas_${productId}`;
-}
-
-/* firma para identificar reseñas (usuario|comentario|puntuacion) */
+function keySavedResenas(productId) { return `resenas_producto_${productId}`; }
+function keyRemovedResenas(productId) { return `resenas_eliminadas_${productId}`; }
 function firmaResena(r) {
   const u = (r.usuario || "").trim();
   const c = (r.comentario || "").replace(/\s+/g, " ").trim();
   const p = String(r.puntuacion || "");
   return `${u}|${c}|${p}`;
 }
-
-/* obtener reseñas visibles (filtra originales marcadas como eliminadas y agrega las guardadas) */
 function obtenerResenasVisibles(producto) {
   const orig = Array.isArray(producto.reseñas) ? producto.reseñas : [];
   const guardadas = JSON.parse(localStorage.getItem(keySavedResenas(producto.id)) || "[]");
-  const removed = JSON.parse(localStorage.getItem(keyRemovedResenas(producto.id)) || "[]"); // array de firmas
-  const origFiltradas = orig.filter((r) => !removed.includes(firmaResena(r)));
+  const removed = JSON.parse(localStorage.getItem(keyRemovedResenas(producto.id)) || "[]");
+  const origFiltradas = orig.filter(r => !removed.includes(firmaResena(r)));
   return { visibles: [...origFiltradas, ...guardadas], origFiltradas, guardadas, removed };
 }
-
-/* promedio y HTML de estrellas */
 function promedioYEstrellas(lista) {
   if (!lista || lista.length === 0) return { avg: 0, html: "☆ ☆ ☆ ☆ ☆" };
   const avg = lista.reduce((s, r) => s + Number(r.puntuacion || 0), 0) / lista.length;
@@ -150,25 +162,20 @@ function promedioYEstrellas(lista) {
   return { avg, html };
 }
 
-/* handler delegado (debe estar definido en alcance global para add/removeListener) */
 function handleEliminarClick(e) {
   const btn = e.target.closest(".btn-eliminar");
   if (!btn) return;
   const productId = btn.getAttribute("data-id");
   const firmaEnc = btn.getAttribute("data-firma") || "";
   const firma = decodeURIComponent(firmaEnc);
-  const src = btn.getAttribute("data-src"); // 'saved' o 'orig'
-
+  const src = btn.getAttribute("data-src");
   if (!productId) return;
-  const confirmar = confirm(
-    "¿Deseas eliminar esta reseña? Esta acción solo afectará a este navegador (no al servidor)."
-  );
-  if (!confirmar) return;
+  if (!confirm("¿Deseas eliminar esta reseña? Esta acción solo afectará a este navegador (no al servidor).")) return;
 
   if (src === "saved") {
     const keySaved = keySavedResenas(productId);
     const guardadas = JSON.parse(localStorage.getItem(keySaved) || "[]");
-    const filtradas = guardadas.filter((g) => firmaResena(g) !== firma);
+    const filtradas = guardadas.filter(g => firmaResena(g) !== firma);
     localStorage.setItem(keySaved, JSON.stringify(filtradas));
   } else {
     const keyRemoved = keyRemovedResenas(productId);
@@ -179,7 +186,6 @@ function handleEliminarClick(e) {
     }
   }
 
-  // re-renderizar (si el producto actual coincide)
   if (productoActualGlobal && Number(productoActualGlobal.id) === Number(productId)) {
     renderResenasYHandlers(productoActualGlobal);
   } else {
@@ -187,85 +193,77 @@ function handleEliminarClick(e) {
   }
 }
 
-/* renderiza las reseñas con botones eliminar y setea delegación */
 function renderResenasYHandlers(producto) {
   const listaCont = document.getElementById("listaReseñas");
   if (!listaCont) return;
-
   const { visibles, guardadas } = obtenerResenasVisibles(producto);
 
-  if (visibles.length === 0) {
+  if (!visibles.length) {
     listaCont.innerHTML = "<p>No hay reseñas aún.</p>";
   } else {
-    listaCont.innerHTML = visibles
-      .map((r) => {
-        const sig = firmaResena(r);
-        const esGuardada = guardadas.some((g) => firmaResena(g) === sig);
-        const boton = `<button class="btn-eliminar" data-id="${producto.id}" data-firma="${encodeURIComponent(
-          sig
-        )}" data-src="${esGuardada ? "saved" : "orig"}" aria-label="Eliminar reseña">Eliminar</button>`;
-        return `
-          <div class="reseña" role="listitem" data-firma="${encodeURIComponent(sig)}">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <strong>${escapeHtml(r.usuario)}</strong>
-              <span aria-hidden="true">${"★".repeat(Number(r.puntuacion || 0))}</span>
-            </div>
-            <p style="margin-top:6px;">${escapeHtml(r.comentario)}</p>
-            <div style="margin-top:6px; text-align:right;">${boton}</div>
+    listaCont.innerHTML = visibles.map(r => {
+      const sig = firmaResena(r);
+      const esGuardada = guardadas.some(g => firmaResena(g) === sig);
+      const boton = `<button class="btn-eliminar" data-id="${producto.id}" data-firma="${encodeURIComponent(sig)}" data-src="${esGuardada ? "saved" : "orig"}" aria-label="Eliminar reseña">Eliminar</button>`;
+      return `
+        <div class="reseña" role="listitem" data-firma="${encodeURIComponent(sig)}">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <strong>${escapeHtml(r.usuario)}</strong>
+            <span aria-hidden="true">${"★".repeat(Number(r.puntuacion || 0))}</span>
           </div>
-        `;
-      })
-      .join("");
+          <p style="margin-top:6px;">${escapeHtml(r.comentario)}</p>
+          <div style="margin-top:6px; text-align:right;">${boton}</div>
+        </div>
+      `;
+    }).join("");
   }
 
-  // actualizar promedio
   const promCont = document.getElementById("promedio");
   if (promCont) {
     const { html } = promedioYEstrellas(visibles);
     promCont.innerHTML = `${html} (${visibles.length})`;
   }
 
-  // delegación: asegurar solo un listener
   listaCont.removeEventListener("click", handleEliminarClick);
   listaCont.addEventListener("click", handleEliminarClick);
 }
 
-/* Bloque principal de detalle */
 if (document.getElementById("detalleProducto")) {
   const cont = document.getElementById("detalleProducto");
   const params = new URLSearchParams(window.location.search);
-  const id = parseInt(params.get("id"), 10);
+  const idParam = params.get("id");
+  const id = idParam ? parseInt(idParam, 10) : null;
 
   cargarProductos()
-    .then((productos) => validarYRepararImagenes(productos))
-    .then((productos) => {
-      // cache global
+    .then(prod => validarYRepararImagenes(prod))
+    .then(productos => {
       window.__productosCache = productos;
-
-      const producto = productos.find((p) => Number(p.id) === Number(id));
+      if (!id) {
+        cont.innerHTML = `<p>ID de producto no especificado.</p>`;
+        return;
+      }
+      const producto = productos.find(p => Number(p.id) === Number(id));
       if (!producto) {
         cont.innerHTML = `<p>Producto no encontrado.</p>`;
         return;
       }
-
-      // Guardamos la referencia global para poder re-renderizar tras eliminar
       productoActualGlobal = producto;
 
-      // crear HTML principal del detalle (galería + info + form)
+      // Rellenar detalle
       cont.innerHTML = `
         <article class="detalle">
           <div class="detalle-grid">
             <div class="galeria">
-              ${producto.imagenes.map((src) => `<img src="${escapeHtml(src)}" alt="${escapeHtml(producto.nombre)}">`).join("")}
+              ${producto.imagenes.map(src => `<img src="${escapeHtml(src)}" alt="${escapeHtml(producto.nombre)}">`).join('')}
             </div>
 
             <div class="detalle-info">
               <h2>${escapeHtml(producto.nombre)}</h2>
               <p class="precio"><strong>Precio:</strong> ₡${Number(producto.precio).toFixed(2)}</p>
-              <p><strong>Stock:</strong> ${escapeHtml(producto.stock)}</p>
-              <p>${escapeHtml(producto.descripcion)}</p>
-              <p><strong>Entrega:</strong> ${escapeHtml(producto.entrega)}</p>
-              <p><strong>Envío:</strong> ${escapeHtml(producto.envio)}</p>
+              <p><strong>Stock:</strong> ${escapeHtml(producto.stock || 'No disponible')}</p>
+              <p>${escapeHtml(producto.descripcion || '')}</p>
+              <p><strong>Entrega:</strong> ${escapeHtml(producto.entrega || '2-5 días hábiles')}</p>
+              <p><strong>Envío:</strong> ${escapeHtml(producto.envio || '₡0 - recogida en tienda')}</p>
               <div style="margin-top:12px;">
                 <button class="btn-Comprar" id="agregarCarrito">Agregar al carrito</button>
               </div>
@@ -292,25 +290,28 @@ if (document.getElementById("detalleProducto")) {
               <button class="btn-VM" type="submit" style="margin-top:0.6rem;">Enviar reseña</button>
             </form>
 
-            <div id="mensajeExito" class="mensaje-exito">¡Gracias! Tu reseña se agregó.</div>
+            <div id="mensajeExito" class="mensaje-exito" style="display:none;">¡Gracias! Tu reseña se agregó.</div>
           </section>
         </article>
       `;
 
-      // renderizar reseñas iniciales (combinadas con guardadas) y botones eliminar
+      // Lightbox handlers (attach after DOM insertion)
+      attachLightboxHandlers();
+
+      // render reseñas
       renderResenasYHandlers(producto);
 
-      // carrito (usar la función centralizada addToCartById si existe)
+      // Agregar al carrito
       const btnAgregar = document.getElementById("agregarCarrito");
       if (btnAgregar) {
         btnAgregar.addEventListener("click", () => {
           if (typeof window.addToCartById === "function") {
             window.addToCartById(producto.id, 1, true);
           } else {
-            // fallback: almacenamiento directo
+            // fallback (muy improbable)
             const key = "carrito_demo";
             const carrito = JSON.parse(localStorage.getItem(key) || "[]");
-            const existe = carrito.find((i) => i.id === producto.id);
+            const existe = carrito.find(i => i.id === producto.id);
             if (existe) existe.cantidad++;
             else carrito.push({ id: producto.id, nombre: producto.nombre, precio: producto.precio, cantidad: 1 });
             localStorage.setItem(key, JSON.stringify(carrito));
@@ -321,7 +322,7 @@ if (document.getElementById("detalleProducto")) {
         });
       }
 
-      // submit del formulario de reseña: guarda en localStorage y re-renders
+      // Envío de reseña
       const form = document.getElementById("formResena");
       form.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -336,37 +337,91 @@ if (document.getElementById("detalleProducto")) {
         guardadas.push(nueva);
         localStorage.setItem(keySaved, JSON.stringify(guardadas));
 
-        // re-render reseñas
         renderResenasYHandlers(producto);
-        document.getElementById("mensajeExito").style.display = "block";
-        setTimeout(() => (document.getElementById("mensajeExito").style.display = "none"), 2500);
+        const mensaje = document.getElementById("mensajeExito");
+        if (mensaje) {
+          mensaje.style.display = "block";
+          setTimeout(() => mensaje.style.display = "none", 2500);
+        }
         form.reset();
       });
     })
-    .catch((err) => {
+    .catch(err => {
       cont.innerHTML = `<p>Error cargando detalle: ${escapeHtml(err.message)}</p>`;
       console.error(err);
     });
 }
 
-/* ---------------- Animaciones: reveal / tilt / lightbox / ctas ---------------- */
+/* ---------------- Lightbox (función para (re)adjuntar) ---------------- */
+function attachLightboxHandlers() {
+  const lb = document.getElementById("lightbox");
+  const lbImg = document.getElementById("lbImg");
+  const lbClose = document.getElementById("lbClose");
+  if (!lb || !lbImg || !lbClose) return;
 
+  // asegurarse de remover listeners previos si hubieran
+  // (vamos a delegar por cada imagen actual en .galeria)
+  document.querySelectorAll(".galeria img").forEach(img => {
+    img.style.cursor = 'zoom-in';
+    img.removeEventListener("click", openLbFromImg);
+    img.addEventListener("click", openLbFromImg);
+  });
+
+  function openLbFromImg(ev) {
+    const src = ev.currentTarget.getAttribute("src");
+    const alt = ev.currentTarget.getAttribute("alt") || "Imagen del producto";
+    lbImg.setAttribute("src", src);
+    lbImg.setAttribute("alt", alt);
+    lb.classList.add("open");
+    lb.setAttribute("aria-hidden", "false");
+    document.documentElement.style.overflow = "hidden";
+    lbClose.focus();
+  }
+
+  function cerrarLightbox() {
+    lb.classList.remove("open");
+    lb.setAttribute("aria-hidden", "true");
+    lbImg.setAttribute("src", "");
+    document.documentElement.style.overflow = "";
+  }
+
+  lbClose.removeEventListener("click", cerrarLightbox);
+  lbClose.addEventListener("click", cerrarLightbox);
+
+  lb.removeEventListener("click", lbBackdropClick);
+  lb.addEventListener("click", lbBackdropClick);
+
+  document.removeEventListener("keydown", lbEscHandler);
+  document.addEventListener("keydown", lbEscHandler);
+
+  function lbBackdropClick(e) {
+    if (e.target === lb) cerrarLightbox();
+  }
+  function lbEscHandler(e) {
+    if (e.key === "Escape" && lb.classList.contains("open")) {
+      lb.classList.remove("open");
+      lb.setAttribute("aria-hidden", "true");
+      lbImg.setAttribute("src", "");
+      document.documentElement.style.overflow = "";
+    }
+  }
+}
+
+/* ---------------- Animaciones: reveal / tilt / inicializadores ---------------- */
 (function () {
-  // Reveal via IntersectionObserver
   const observerOptions = { root: null, rootMargin: "0px 0px -8% 0px", threshold: 0.06 };
   if ("IntersectionObserver" in window) {
     const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
+      entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add("in-view");
           revealObserver.unobserve(entry.target);
         }
       });
     }, observerOptions);
-    document.querySelectorAll(".producto-card").forEach((card) => revealObserver.observe(card));
+    document.querySelectorAll(".producto-card").forEach(card => revealObserver.observe(card));
   }
 
-  // Tilt 3D on pointer devices
   function handleTilt(e) {
     const card = e.currentTarget;
     const rect = card.getBoundingClientRect();
@@ -376,55 +431,18 @@ if (document.getElementById("detalleProducto")) {
     const rotateX = (0.5 - py) * 8;
     card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(0)`;
   }
-  function resetTilt(e) {
-    const card = e.currentTarget;
-    card.style.transform = "";
-  }
+  function resetTilt(e) { e.currentTarget.style.transform = ""; }
 
   if (window.matchMedia("(pointer: fine)").matches) {
-    document.querySelectorAll(".producto-card .card").forEach((c) => {
+    document.addEventListener("mouseover", (ev) => {
+      const c = ev.target.closest(".producto-card .card");
+      if (!c) return;
       c.addEventListener("mousemove", handleTilt);
       c.addEventListener("mouseleave", resetTilt);
-      c.addEventListener("mouseenter", () => {
-        c.style.transition = "transform 220ms ease";
-      });
+      c.addEventListener("mouseenter", () => { c.style.transition = "transform 220ms ease"; });
     });
   }
 
-  // Lightbox
-  const lb = document.getElementById("lightbox");
-  const lbImg = document.getElementById("lbImg");
-  const lbClose = document.getElementById("lbClose");
-  if (lb && lbImg) {
-    document.querySelectorAll(".galeria img").forEach((img) => {
-      img.addEventListener("click", (ev) => {
-        const src = ev.currentTarget.getAttribute("src");
-        const alt = ev.currentTarget.getAttribute("alt") || "Imagen del producto";
-        lbImg.setAttribute("src", src);
-        lbImg.setAttribute("alt", alt);
-        lb.classList.add("open");
-        lb.setAttribute("aria-hidden", "false");
-        document.documentElement.style.overflow = "hidden";
-      });
-    });
-
-    function cerrarLightbox() {
-      lb.classList.remove("open");
-      lb.setAttribute("aria-hidden", "true");
-      lbImg.setAttribute("src", "");
-      document.documentElement.style.overflow = "";
-    }
-
-    lbClose.addEventListener("click", cerrarLightbox);
-    lb.addEventListener("click", (e) => {
-      if (e.target === lb) cerrarLightbox();
-    });
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && lb.classList.contains("open")) cerrarLightbox();
-    });
-  }
-
-  // Animación CTA en carga
   window.addEventListener("load", () => {
     document.querySelectorAll(".btn-Comprar, .btn-VM, .btn-buy").forEach((b, idx) => {
       b.style.transform = "translateY(8px)";
@@ -438,12 +456,11 @@ if (document.getElementById("detalleProducto")) {
   });
 })();
 
-/* ------------------ Carrito centralizado (pegar al final de script.js) ------------------ */
+/* ------------------ Carrito centralizado ------------------ */
 (function () {
   const LS_KEY = 'carrito_demo';
   const ENVIO_COST = 3500;
 
-  /* ----- util localStorage ----- */
   function readCart() {
     try {
       const raw = localStorage.getItem(LS_KEY);
@@ -464,7 +481,6 @@ if (document.getElementById("detalleProducto")) {
   function writeCart(cart) {
     try {
       localStorage.setItem(LS_KEY, JSON.stringify(cart));
-      // eventos para que badge y otras pestañas se actualicen
       window.dispatchEvent(new Event('cart:update'));
       window.dispatchEvent(new Event('cart:triggerUpdate'));
     } catch (err) {
@@ -472,7 +488,6 @@ if (document.getElementById("detalleProducto")) {
     }
   }
 
-  /* ----- Badge (header) ----- */
   function getBadgeEl() {
     return document.getElementById('cartCount') || document.querySelector('.cart-widget__badge') || document.querySelector('.cart-bubble');
   }
@@ -490,31 +505,23 @@ if (document.getElementById("detalleProducto")) {
     }
   }
 
-  // Inicializar badge al cargar
   document.addEventListener('DOMContentLoaded', () => updateCartBadge(false));
-  // actualizar si otra pestaña cambia localStorage
   window.addEventListener('storage', (e) => { if (e.key === LS_KEY) updateCartBadge(false); });
-  // actualizar por eventos custom
   window.addEventListener('cart:triggerUpdate', () => updateCartBadge(true));
   window.addEventListener('cart:update', () => updateCartBadge(false));
 
-  /* ----- Añadir al carrito (global) ----- */
-  /* ======= Opción 1: addToCartById con lock anti-duplicado y toast fallback ======= */
   async function addToCartById(id, cantidad = 1, showModal = true) {
-    // bloqueo anti-duplicado (600 ms)
     if (window.__addingToCartLock && Date.now() - window.__addingToCartLock < 600) return;
     window.__addingToCartLock = Date.now();
 
-    // intenta buscar datos del producto en cache window.__productosCache (si existe)
     let producto = null;
     if (window.__productosCache && Array.isArray(window.__productosCache)) {
       producto = window.__productosCache.find(p => String(p.id) === String(id));
     }
-    // si no hay producto en cache, intenta obtener info mínima desde el DOM
+
     if (!producto) {
       const card = document.querySelector(`.btn-add-cart[data-id="${id}"]`)?.closest('.producto-card') ||
-                   document.querySelector(`a[href*="detalle_coleccionable.html?id=${id}"]`)?.closest('.producto-card') ||
-                   document.querySelector('.detalle');
+                   document.querySelector(`.detalle`) || document.querySelector('.producto-card');
       if (card) {
         const nombre = card.querySelector('h3')?.textContent?.trim() || `Producto ${id}`;
         const precioText = card.querySelector('.precio')?.textContent || '0';
@@ -525,7 +532,6 @@ if (document.getElementById("detalleProducto")) {
     }
     if (!producto) producto = { id, nombre: `Producto ${id}`, precio: 0, imagenes: ['img/placeholder.png'] };
 
-    // leer y actualizar carrito
     const cart = readCart();
     const existente = cart.find(i => String(i.id) === String(producto.id));
     if (existente) existente.cantidad = Number(existente.cantidad || 0) + Number(cantidad);
@@ -534,7 +540,6 @@ if (document.getElementById("detalleProducto")) {
     writeCart(cart);
     updateCartBadge(true);
 
-    // mostrar modal si existe; si no, mostrar toast/alert como fallback
     if (showModal) {
       const modal = document.getElementById('addCartModal');
       const modalImg = document.getElementById('modalProdImg');
@@ -549,7 +554,7 @@ if (document.getElementById("detalleProducto")) {
         modal.setAttribute('aria-hidden', 'false');
         setTimeout(()=> modalContinue && modalContinue.focus(), 80);
       } else {
-        // fallback: toast (crea uno si no existe)
+        // fallback toast
         let toast = document.getElementById('cartAddedToast');
         if (!toast) {
           toast = document.createElement('div');
@@ -578,11 +583,9 @@ if (document.getElementById("detalleProducto")) {
     }
   }
 
-  // Exponer globalmente
   window.addToCartById = addToCartById;
   window.updateCartBadge = updateCartBadge;
 
-  /* ----- Delegación: botones .btn-add-cart (catálogo) ----- */
   document.addEventListener('click', (e) => {
     const addBtn = e.target.closest('.btn-add-cart');
     if (!addBtn) return;
@@ -591,7 +594,7 @@ if (document.getElementById("detalleProducto")) {
     addToCartById(id, 1, true).catch(err => console.error(err));
   });
 
-  /* ----- Delegación extra: botón #agregarCarrito (detalle) ----- */
+  // handler para botones #agregarCarrito que pueden estar en detalle
   document.addEventListener('click', (e) => {
     const a = e.target.closest('#agregarCarrito');
     if (!a) return;
@@ -600,17 +603,12 @@ if (document.getElementById("detalleProducto")) {
     if (!id) {
       const card = document.querySelector('.producto-card') || document.querySelector('.detalle');
       const derivedId = card ? card.getAttribute('data-id') : null;
-      if (derivedId) {
-        addToCartById(derivedId, 1, true).catch(err => console.error(err));
-      } else {
-        console.warn('No se pudo inferir el id del producto para agregar al carrito.');
-      }
-    } else {
-      addToCartById(id, 1, true).catch(err => console.error(err));
-    }
+      if (derivedId) addToCartById(derivedId, 1, true).catch(err => console.error(err));
+      else console.warn('No se pudo inferir el id del producto para agregar al carrito.');
+    } else addToCartById(id, 1, true).catch(err => console.error(err));
   });
 
-  /* ----- Renderizador para carrito.html (si existe #tablaCarrito) ----- */
+  /* Carrito página (solo si existe tabla) */
   function formatMoney(n) {
     return '₡' + Number(n).toLocaleString('es-CR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
   }
@@ -654,19 +652,14 @@ if (document.getElementById("detalleProducto")) {
     }
   }
 
-  // Delegación en tabla: cambio de cantidad y eliminar
   document.addEventListener('input', (e) => {
     if (!e.target.classList.contains('cart-qty')) return;
     const idx = Number(e.target.getAttribute('data-idx'));
     let cart = readCart();
     let nueva = parseInt(e.target.value, 10);
     if (isNaN(nueva)) nueva = 0;
-    if (nueva <= 0) {
-      // eliminar
-      cart.splice(idx, 1);
-    } else {
-      if (cart[idx]) cart[idx].cantidad = nueva;
-    }
+    if (nueva <= 0) cart.splice(idx, 1);
+    else if (cart[idx]) cart[idx].cantidad = nueva;
     writeCart(cart);
     renderCarritoPage();
     updateCartBadge(true);
@@ -685,47 +678,38 @@ if (document.getElementById("detalleProducto")) {
     }
   });
 
-  // envío: recalcular al cambiar radio (si está la sección)
   document.addEventListener('change', (e) => {
     if (e.target && e.target.name === 'envio') {
-      // guardar preferencia opcional
       localStorage.setItem('metodoEnvio', (document.querySelector("input[name='envio']:checked")||{}).value || 'tienda');
       renderCarritoPage();
       updateCartBadge(false);
     }
   });
 
-  // iniciar render si estamos en la página carrito
   document.addEventListener('DOMContentLoaded', () => {
     renderCarritoPage();
   });
 
-  // Exponer para debugging
   window._cartAPI = { readCart, writeCart, addToCartById, renderCarritoPage, updateCartBadge };
 })();
 
-/* ------------------ Setup global del modal de carrito ------------------ */
+/* ------------------ Modal global handlers (si existe #addCartModal) ------------------ */
 (function initGlobalCartModalHandlers() {
-  // Evitar creación múltiple
   if (window.__cartModalHandlersInitialized) return;
   window.__cartModalHandlersInitialized = true;
 
-  function qs(sel) { return document.querySelector(sel); }
-
   document.addEventListener('DOMContentLoaded', () => {
-    const modal = qs('#addCartModal');
+    const modal = document.getElementById('addCartModal');
     if (!modal) return;
 
     const backdrop = modal.querySelector('.modal-confirm__backdrop') || modal;
-    const closeBtn = qs('#modalClose');
-    const continueBtn = qs('#modalContinue');
+    const closeBtn = document.getElementById('modalClose');
+    const continueBtn = document.getElementById('modalContinue');
     const card = modal.querySelector('.modal-confirm__card') || modal.querySelector('.modal-confirm__content');
 
-    // Funciones abrir / cerrar (reutilizables)
     function openModalFocus() {
       modal.classList.add('open');
       modal.setAttribute('aria-hidden', 'false');
-      // foco en botón continuar para accesibilidad
       if (continueBtn) continueBtn.focus();
     }
     function closeModal() {
@@ -733,8 +717,6 @@ if (document.getElementById("detalleProducto")) {
       modal.setAttribute('aria-hidden', 'true');
     }
 
-    // Si alguien (por ejemplo addToCartById) modifica modal.classList, esto se resume
-    // Añadimos listeners seguros y sin duplicados
     if (closeBtn) {
       closeBtn.addEventListener('click', (e) => { e.preventDefault(); closeModal(); });
       closeBtn.setAttribute('type', 'button');
@@ -744,39 +726,18 @@ if (document.getElementById("detalleProducto")) {
       continueBtn.setAttribute('type', 'button');
     }
 
-    // Clic en backdrop para cerrar (solo si clic fue en backdrop)
     if (backdrop) {
       backdrop.addEventListener('click', (e) => {
-        // si backdrop es el propio modal, permitir cerrar solo cuando clic fuera del card
         if (backdrop === modal) {
           if (!card || !card.contains(e.target)) closeModal();
-        } else {
-          if (e.target === backdrop) closeModal();
-        }
+        } else if (e.target === backdrop) closeModal();
       });
     }
 
-    // Evitar que clics dentro de la tarjeta cierren el modal por bubbling
-    if (card) {
-      card.addEventListener('click', (e) => e.stopPropagation());
-    }
+    if (card) card.addEventListener('click', (e) => e.stopPropagation());
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('open')) closeModal(); });
 
-    // Cerrar con tecla Escape
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && modal.classList.contains('open')) {
-        closeModal();
-      }
-    });
-
-    // Exponer pequeñas utilidades para debugging
     window._cartModal = { open: openModalFocus, close: closeModal, el: modal };
-
-    // Si el modal ya fue abierto antes de DOMContentLoaded, forzamos foco
-    if (modal.classList.contains('open')) {
-      setTimeout(() => { if (continueBtn) continueBtn.focus(); }, 80);
-    }
+    if (modal.classList.contains('open')) { setTimeout(() => { if (continueBtn) continueBtn.focus(); }, 80); }
   });
 })();
-
-
-/* ---------------- Fin del código del carrito ---------------- */
