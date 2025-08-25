@@ -3,7 +3,7 @@
     {
       "id": 1,
       "nombre": "God Of War (PS2)",
-      "precio": 25.99,
+      "precio": 25000,
       "categoria": "Play Station",
       "stock": 10,
       "descripcion": "Juego de acción y aventura para PlayStation 2.",
@@ -29,7 +29,7 @@
     {
       "id": 2,
       "nombre": "Forza Horizon 5",
-      "precio": 59.99,
+      "precio": 46500,
       "categoria": "Xbox",
       "stock": 15,
       "descripcion": "Juego de carreras en mundo abierto para Xbox y PC.",
@@ -55,7 +55,7 @@
     {
       "id": 3,
       "nombre": "Halo: Combat Evolved",
-      "precio": 19.99,
+      "precio": 55000,
       "categoria": "Xbox",
       "stock": 8,
       "descripcion": "Shooter clásico en primera persona para Xbox.",

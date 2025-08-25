@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         </div>
         <div class="detalle-info">
           <h2>${producto.nombre}</h2>
-          <p><strong>Precio:</strong> $${producto.precio}</p>
+          <p><strong>Precio:</strong> ₡${producto.precio}</p>
           <p><strong>Categoría:</strong> ${producto.categoria}</p>
           <p><strong>Stock:</strong> ${producto.stock}</p>
           <p><strong>Entrega:</strong> ${producto.entrega}</p>
